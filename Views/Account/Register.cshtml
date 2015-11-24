@@ -1,4 +1,4 @@
-﻿@model TestApp.Models.RegisterModel
+﻿@model TestApp.Models.Domain.RegisterModel
 @{
     ViewBag.Title = "Register";
 }
@@ -30,5 +30,7 @@
     }
 </section>
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+    <script src="@Url.Content("~/Scripts/jquery-1.8.2.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+<script src="@Url.Content("~/Scripts/modernizr-2.6.2.js")"></script>
 }

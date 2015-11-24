@@ -34,6 +34,13 @@ defaults: new { controller = "News", action = "Edit", id = UrlParameter.Optional
 );
 
 
+            routes.MapRoute(
+name: "NewsTagsWidget",
+url: "{controller}/{action}",
+defaults: new { controller = "News", action = "NewsTagsWidget" }
+);
+
+
 
         }
     }

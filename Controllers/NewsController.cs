@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Web.Mvc;
 using TestApp.Models;
+using TestApp.Models.Domain;
 using TestApp.Services;
+using TestApp.Services.Interfaces;
 
 namespace TestApp.Controllers
 {
@@ -9,19 +11,22 @@ namespace TestApp.Controllers
     {
         private readonly INewsService _newsService;
         private readonly IUserService _userService;
+        private readonly INewsTagService _newsTagService;
 
-        public NewsController(IUserService userService, INewsService newsService)
+        public NewsController(IUserService userService, INewsService newsService, INewsTagService newsTagService)
         {
             _newsService = newsService;
+            _newsTagService = newsTagService;
             _userService = userService;
 
             ViewBag.IsAdmin = _userService.IsUserInRole("Admin");
         }
 
+
+
         public ActionResult List()
         {
             var model = _newsService.List();
-
             return View(model);
         }
 
@@ -34,7 +39,7 @@ namespace TestApp.Controllers
 
         public ActionResult Edit(int? id)
         {
-            var model = id != null ? _newsService.GetById((int)id) : new News();
+            var model = id != null ? _newsService.GetById((int)id) : new NewsModel();
             if (model == null)
             {
                 return RedirectToAction("ListAdmin");
@@ -44,7 +49,7 @@ namespace TestApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(News model)
+        public ActionResult Edit(NewsModel model)
         {
             if (model != null & ModelState.IsValid)
             {
@@ -70,6 +75,13 @@ namespace TestApp.Controllers
             _newsService.Delete(id);
 
             return RedirectToAction("ListAdmin");
+        }
+
+
+        public ActionResult NewsTagsWidget()
+        {
+            var model = _newsTagService.GetNewsTagsList();
+            return View(model);
         }
     }
 }

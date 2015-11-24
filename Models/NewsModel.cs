@@ -1,27 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity;
+using System.Linq;
+using System.Web;
 
 namespace TestApp.Models
 {
-
-    public class NewsContext : DbContext
+    public class NewsModel
     {
-        public NewsContext() : base("DefaultConnection")
-        {
-            
-        }
-
-        public DbSet<News> News { get; set; }
-    }
-
-    [Table("News")]
-    public class News
-    {
-
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]
@@ -35,5 +21,7 @@ namespace TestApp.Models
         public DateTime Created { get; set; }
 
         public int CreatedBy { get; set; }
+
+        public string Tags { get; set; }
     }
 }

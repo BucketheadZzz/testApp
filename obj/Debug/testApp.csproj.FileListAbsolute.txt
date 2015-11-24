@@ -145,6 +145,7 @@ D:\Proj\MvcApplication\bin\Microsoft.Web.WebPages.OAuth.xml
 D:\Proj\MvcApplication\bin\WebMatrix.WebData.xml
 D:\Proj\MvcApplication\bin\Org.Mentalis.Security.Cryptography.xml
 D:\Proj\MvcApplication\bin\Mono.Math.xml
-D:\Proj\MvcApplication\obj\Debug\testApp.csprojResolveAssemblyReference.cache
 D:\Proj\MvcApplication\obj\Debug\testApp.dll
 D:\Proj\MvcApplication\obj\Debug\testApp.pdb
+D:\Proj\MvcApplication\bin\AutoMapper.dll
+D:\Proj\MvcApplication\bin\AutoMapper.xml
