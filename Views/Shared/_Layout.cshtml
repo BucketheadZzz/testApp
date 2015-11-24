@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>@ViewBag.Title - My ASP.NET MVC Application</title>
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width"/>
+        <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/bootstrap/css/bootstrap.min.css")"/>
+        <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/bootstrap/css/blog.css")"/>
+        <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/bootstrap/css/signin.css")"/>
+
+    </head>
+    <body>
+        <div class="blog-masthead">
+            <div class="container">
+                <nav class="blog-nav">
+                    @Html.ActionLink("Home", "Index", "Home", null, new {@class = "blog-nav-item"})
+                    @if (ViewBag.IsAdmin)
+                    {
+                        @Html.ActionLink("Edit news", "ListAdmin", "News", null, new {@class = "blog-nav-item"})
+                    }
+                </nav>
+
+              
+            </div>
+        </div>
+    <div id="body">
+        <div class="pull-right margin">
+            @Html.Partial("_LoginPartial")
+        </div>
+        <section class="container">
+            @RenderBody()
+        </section>
+    </div>
+        <footer class="blog-footer">
+            <p>&copy; @DateTime.Now.Year - My ASP.NET MVC Application</p>
+        </footer>
+        @RenderSection("scripts", required: false)
+    </body>
+</html>

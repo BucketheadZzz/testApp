@@ -1,0 +1,27 @@
+﻿@model IList<TestApp.Models.News>
+
+@{
+    Layout = null;
+}
+
+<div class="blog-header">
+    <h1 class="blog-title">The Blog</h1>
+    <p class="lead blog-description">Test description.</p>
+</div>
+
+@if (Model.Any())
+{
+    <div class="row">
+        <div class="col-sm-8 blog-main">
+            @foreach (var item in Model)
+            {
+                <div class="blog-post">
+                    <h2 class="blog-post-title">@item.Title</h2>
+                    <p class="blog-post-meta">@item.Created.ToString("D")</p>
+                    <p>@item.ShortDescrpition</p>
+                </div>
+            }
+
+        </div>
+    </div>
+}

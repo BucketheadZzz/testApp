@@ -1,0 +1,23 @@
+﻿@model TestApp.Models.LocalPasswordModel
+@{
+    ViewBag.Title = "Manage Account";
+}
+
+
+
+<section id="loginForm">
+
+    <h1 class="form-signin-heading">@ViewBag.Title.</h1>
+
+
+    <p class="message-success">@ViewBag.StatusMessage</p>
+
+    <p>You're logged in as <strong>@User.Identity.Name</strong>.</p>
+
+    @Html.Partial("_ChangePasswordPartial")
+
+</section>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

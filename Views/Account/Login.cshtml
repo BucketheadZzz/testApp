@@ -1,0 +1,38 @@
+﻿@model TestApp.Models.LoginModel
+
+@{
+    ViewBag.Title = "Log in";
+}
+
+<section id="loginForm">
+    @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        <h1 class="form-signin-heading">@ViewBag.Title.</h1>
+
+        @Html.TextBoxFor(m => m.UserName, new { @placeholder = "Login", @class = "form-control", type = "text", required = "required" })
+        @Html.ValidationMessageFor(m => m.UserName)
+
+        @Html.PasswordFor(m => m.Password, new { @placeholder = "Password", @class = "form-control", type = "password", required = "required" })
+        @Html.ValidationMessageFor(m => m.Password)
+
+        <label class="checkbox">
+            @Html.CheckBoxFor(m => m.RememberMe)
+            Remember me
+        </label>
+
+        <input type="submit" value="Log in" class="btn btn-lg btn-primary btn-block" />
+
+        <p>
+            @Html.ActionLink("Register", "Register") if you don't have an account.
+        </p>
+    }
+</section>
+
+@section Scripts {
+   <script src="@Url.Content("~/Scripts/jquery-1.8.2.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+<script src="@Url.Content("~/Scripts/modernizr-2.6.2.js")"></script>
+}
