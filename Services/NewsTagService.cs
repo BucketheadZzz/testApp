@@ -92,5 +92,13 @@ namespace TestApp.Services
         {
             return _newsTagsContext.NewsTagMappings.Any(x => x.NewsId == newsId && x.NewsTagId == tagId);
         }
+
+        public void RemoveMappingByTagId(int tagId)
+        {
+            var tags = _newsTagsContext.NewsTagMappings.Where(x => x.NewsTagId == tagId);
+            _newsTagsContext.NewsTagMappings.RemoveRange(tags);
+            _newsTagsContext.SaveChanges();
+        }
+
     }
 }

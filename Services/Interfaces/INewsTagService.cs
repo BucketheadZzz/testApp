@@ -14,5 +14,7 @@ namespace TestApp.Services.Interfaces
         string GetTagsByNewsId(int newsId);
 
         bool IsAlreadyMapped(int tagId, int newsId);
+
+        void RemoveMappingByTagId(int tagId);
     }
 }

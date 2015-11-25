@@ -39,7 +39,6 @@ namespace TestApp.Services
             var removedTag = _newsTagsContext.NewsTags.SingleOrDefault(x => x.Name == tagName);
             if (removedTag == null) return;
 
-            RemoveMappingByTagId(removedTag.Id);
             _newsTagsContext.NewsTags.Remove(removedTag);
             _newsTagsContext.SaveChanges();
         }
@@ -51,13 +50,7 @@ namespace TestApp.Services
             return _newsTagsContext.NewsTags.Any(x => x.Name == tag);
         }
 
-        public void RemoveMappingByTagId(int tagId)
-        {
-            var tags = _newsTagsContext.NewsTagMappings.Where(x => x.NewsTagId == tagId);
-            _newsTagsContext.NewsTagMappings.RemoveRange(tags);
-            _newsTagsContext.SaveChanges();
-        }
-
+      
      
     }
 }
