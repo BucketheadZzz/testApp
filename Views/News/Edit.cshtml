@@ -1,18 +1,22 @@
 ﻿@model TestApp.Models.NewsModel
 
-<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/bootstrap/css/bootstrap-tagsinput.css")"/>
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/bootstrap/css/bootstrap-tagsinput.css")" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="@Url.Content("~/Content/bootstrap/js/bootstrap.js")"></script>
 <script src="@Url.Content("~/Content/bootstrap/js/bootstrap-tagsinput.js")"></script>
-
+<style>
+    .file-table img {
+        max-width: 150px;
+    }
+</style>
 <h1>Edit item</h1>
 <div class="edit-form">
-    @using (Html.BeginForm())
+    @using (Html.BeginForm("Edit", "News", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.HiddenFor(x => x.Id)
         @Html.HiddenFor(x => x.Created)
         @Html.HiddenFor(x => x.CreatedBy)
-      
+
         <div class="form-group">
             @Html.LabelFor(x => x.Title)
             @Html.TextBoxFor(x => x.Title, new { @class = "form-control", required = "required" })
@@ -20,13 +24,52 @@
         </div>
         <div class="form-group">
             @Html.LabelFor(x => x.ShortDescrpition)
-            @Html.TextAreaFor(x => x.ShortDescrpition, new {@class = "form-control", required = "required", style = "min-height: 200px;"})
+            @Html.TextAreaFor(x => x.ShortDescrpition, new { @class = "form-control", required = "required", style = "min-height: 200px;" })
             @Html.ValidationMessageFor(x => x.ShortDescrpition)
         </div>
         <div class="form-group">
             @Html.LabelFor(x => x.Tags)
-            @Html.TextBoxFor(x => x.Tags, new { data_role="tagsinput" })
+            @Html.TextBoxFor(x => x.Tags, new { data_role = "tagsinput" })
 
         </div>
+        if (Model.NewsFilesMappings.Any())
+        {
+            <div class="form-group">
+                <label>Existing files</label>
+                <table class="table file-table">
+                    @foreach (var item in Model.NewsFilesMappings)
+                    {
+                        <tr>
+                            <td>
+                                @item.File.FileName
+                            </td>
+                            <td>
+                                @switch (item.File.ContentType)
+                                {
+                                    case "image/jpeg":
+                                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.File.BinaryData)" alt="@item.File.FileName" />
+                                        break;
+                                    case "audio/mp3":
+                                    <audio controls>
+                                        <source src="data:audio/mpeg;base64,@Convert.ToBase64String(item.File.BinaryData)" type="audio/mpeg" />
+                                        <em>Sorry, your browser doesn't support HTML5 audio.</em>
+                                    </audio>
+                                        break;
+                                }
+                            </td>
+                            <td>
+                                @Html.ActionLink("Delete", "DeleteFileFromNew", "News", new { newsId = Model.Id, fileId = item.File.Id }, new { @class = "btn btn-xs btn-danger" })
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        }
+
+        <div class="form-group">
+            <label>Attachments</label>
+            <input type="file" id="Files" name="Files" multiple />
+        </div>
         <input type="submit" class="btn btn-default" value="Save" />
-    }</div>
+    }
+</div>

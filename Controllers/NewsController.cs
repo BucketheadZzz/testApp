@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Web.Mvc;
 using TestApp.Models;
-using TestApp.Models.Domain;
-using TestApp.Services;
 using TestApp.Services.Interfaces;
 
 namespace TestApp.Controllers
@@ -13,11 +10,13 @@ namespace TestApp.Controllers
         private readonly INewsService _newsService;
         private readonly IUserService _userService;
         private readonly INewsTagService _newsTagService;
+        private readonly INewsFileService _newsFileService;
 
-        public NewsController(IUserService userService, INewsService newsService, INewsTagService newsTagService)
+        public NewsController(IUserService userService, INewsService newsService, INewsTagService newsTagService, INewsFileService newsFileService)
         {
             _newsService = newsService;
             _newsTagService = newsTagService;
+            _newsFileService = newsFileService;
             _userService = userService;
 
             ViewBag.IsAdmin = _userService.IsUserInRole("Admin");
@@ -77,6 +76,13 @@ namespace TestApp.Controllers
             _newsService.Delete(id);
 
             return RedirectToAction("ListAdmin");
+        }
+
+        public ActionResult DeleteFileFromNew(int newsId, int fileId)
+        {
+            _newsFileService.RemoveMappingByNewsIdAndFileId(newsId,fileId);
+
+            return RedirectToAction("Edit", new {id = newsId});
         }
 
 

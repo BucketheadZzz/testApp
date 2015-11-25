@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Web;
 using TestApp.Models.Domain;
 
 namespace TestApp.Services.Interfaces
@@ -11,8 +7,10 @@ namespace TestApp.Services.Interfaces
     {
         File GetById(int id);
 
-        int Add(File picture);
+        int Add(HttpPostedFileWrapper picture);
 
         void Delete(int id);
+
+        void Delete(int[] ids);
     }
 }

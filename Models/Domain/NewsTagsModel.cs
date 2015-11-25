@@ -13,7 +13,7 @@ namespace TestApp.Models.Domain
             
         }
 
-        public DbSet<NewsTag_Mapping> NewsTagMappings { get; set; }
+        public DbSet<NewsTagMapping> NewsTagMappings { get; set; }
 
         public DbSet<NewsTag> NewsTags { get; set; }
     }
@@ -24,7 +24,7 @@ namespace TestApp.Models.Domain
 
         public NewsTag()
         {
-            NewsTag_Mapping = new HashSet<NewsTag_Mapping>();
+            NewsTagMapping = new HashSet<NewsTagMapping>();
         }
 
         [Key]
@@ -33,11 +33,11 @@ namespace TestApp.Models.Domain
 
         public string Name { get; set; }
 
-        public virtual ICollection<NewsTag_Mapping> NewsTag_Mapping { get; set; }
+        public virtual ICollection<NewsTagMapping> NewsTagMapping { get; set; }
     }
 
     [Table("NewsTag_Mapping")]
-    public class NewsTag_Mapping
+    public class NewsTagMapping
     {
 
         

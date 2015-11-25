@@ -13,10 +13,13 @@ namespace TestApp.Services
     {
         private readonly NewsContext _newsContext;
         private readonly INewsTagService _newsTagService;
-        public NewsService(NewsContext newsContext, INewsTagService newsTagService)
+        private readonly INewsFileService _fileService;
+
+        public NewsService(NewsContext newsContext, INewsTagService newsTagService, INewsFileService fileService)
         {
             _newsContext = newsContext;
             _newsTagService = newsTagService;
+            _fileService = fileService;
         }
 
         public void Add(NewsModel item)
@@ -28,6 +31,10 @@ namespace TestApp.Services
             if (!String.IsNullOrEmpty(item.Tags))
             {
                 _newsTagService.SaveTagsMappingToNews(item.Tags, entity.Id);
+            }
+            if (item.Files.Count > 0)
+            {
+               _fileService.AddFileMappingToNews(item.Files,entity.Id);
             }
         }
 
@@ -44,6 +51,10 @@ namespace TestApp.Services
             {
                 _newsTagService.SaveTagsMappingToNews(item.Tags, entity.Id);
             }
+            if (item.Files.Count > 0)
+            {
+                _fileService.AddFileMappingToNews(item.Files, entity.Id);
+            }
         }
 
 
@@ -53,7 +64,7 @@ namespace TestApp.Services
             if (removedItem != null)
             {
                 _newsTagService.RemoveMappingByNewsId(id);
-
+                _fileService.RemoveMappingByNewsId(id);
                 var entity = removedItem.ToEntity();
                 _newsContext.News.Remove(entity);
                 _newsContext.SaveChanges();
@@ -76,27 +87,15 @@ namespace TestApp.Services
 
         public IList<NewsModel> List()
         {
-            return _newsContext.News.Select(x => new NewsModel()
-            {
-                Created = x.Created,
-                CreatedBy = x.CreatedBy,
-                Title = x.Title,
-                ShortDescrpition = x.ShortDescrpition,
-                Id = x.Id
-
-            }).ToList();
+            return _newsContext.News.Select(x => x).ToListModel();
         }
 
         public IList<NewsModel> GetNewsByTag(string tag)
         {
-            return (from news in _newsContext.News where news.NewsTag_Mapping.Count(x => x.NewsTag.Name == tag) > 0 select  new NewsModel()
-            {
-                Created = news.Created,
-                CreatedBy = news.CreatedBy,
-                Title = news.Title,
-                ShortDescrpition = news.ShortDescrpition,
-                Id = news.Id
-            }).ToList() ;
+            return
+                (from news in _newsContext.News
+                    where news.NewsTagMapping.Count(x => x.NewsTag.Name == tag) > 0
+                    select news).ToListModel();
         }
     }
 }

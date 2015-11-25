@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Web;
+using TestApp.Models.Domain;
 
 namespace TestApp.Models
 {
@@ -23,5 +23,9 @@ namespace TestApp.Models
         public int CreatedBy { get; set; }
 
         public string Tags { get; set; }
+
+        public IList<HttpPostedFileWrapper> Files { get; set; }
+
+        public ICollection<NewsFileMapping> NewsFilesMappings { get; set; } 
     }
 }

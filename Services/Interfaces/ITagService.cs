@@ -1,6 +1,4 @@
-﻿using Antlr.Runtime.Tree;
-
-namespace TestApp.Services.Interfaces
+﻿namespace TestApp.Services.Interfaces
 {
     public interface ITagService
     {

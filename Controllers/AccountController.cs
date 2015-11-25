@@ -4,9 +4,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using Microsoft.Web.WebPages.OAuth;
 using TestApp.Filters;
-using TestApp.Models;
 using TestApp.Models.Domain;
-using TestApp.Services;
 using TestApp.Services.Interfaces;
 using WebMatrix.WebData;
 
@@ -113,18 +111,16 @@ namespace TestApp.Controllers
             ManageMessageId? message = null;
 
             // Only disassociate the account if the currently logged in user is the owner
-            if (ownerAccount == User.Identity.Name)
+            if (ownerAccount != User.Identity.Name) return RedirectToAction("Manage", new {Message = message});
+            // Use a transaction to prevent the user from deleting their last login credential
+            using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.Serializable }))
             {
-                // Use a transaction to prevent the user from deleting their last login credential
-                using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.Serializable }))
+                bool hasLocalAccount = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
+                if (hasLocalAccount || OAuthWebSecurity.GetAccountsFromUserName(User.Identity.Name).Count > 1)
                 {
-                    bool hasLocalAccount = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
-                    if (hasLocalAccount || OAuthWebSecurity.GetAccountsFromUserName(User.Identity.Name).Count > 1)
-                    {
-                        OAuthWebSecurity.DeleteAccount(provider, providerUserId);
-                        scope.Complete();
-                        message = ManageMessageId.RemoveLoginSuccess;
-                    }
+                    OAuthWebSecurity.DeleteAccount(provider, providerUserId);
+                    scope.Complete();
+                    message = ManageMessageId.RemoveLoginSuccess;
                 }
             }
 
@@ -175,10 +171,7 @@ namespace TestApp.Controllers
                     {
                         return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
                     }
-                    else
-                    {
-                        ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
-                    }
+                    ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
                 }
             }
             else
@@ -220,10 +213,7 @@ namespace TestApp.Controllers
             {
                 return Redirect(returnUrl);
             }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
+            return RedirectToAction("Index", "Home");
         }
 
         public enum ManageMessageId

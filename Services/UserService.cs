@@ -8,7 +8,7 @@ namespace TestApp.Services
 {
     public class UserService: IUserService
     {
-        private static SimpleDBInitializer _initializer;
+        private static SimpleDbInitializer _initializer;
         private static object _initializerLock = new object();
         private static bool _isInitialized;
         public UserService()
@@ -30,9 +30,9 @@ namespace TestApp.Services
             return WebSecurity.CurrentUserId;
         }
 
-        private class SimpleDBInitializer
+        private class SimpleDbInitializer
         {
-            public SimpleDBInitializer()
+            public SimpleDbInitializer()
             {
                 try
                 {

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using TestApp.Models;
 using TestApp.Models.Domain;
 using TestApp.Services.Interfaces;
@@ -39,16 +36,11 @@ namespace TestApp.Services
                 _newsTagsContext.SaveChanges();
             }
 
-            var listMapping = new List<NewsTag_Mapping>();
-            foreach (var tag in splitedTags)
-            {
-                var addedId = _tagService.Add(tag);
-                if (!IsAlreadyMapped(addedId, newsId))
-                {
-                    listMapping.Add(new NewsTag_Mapping(){NewsId =  newsId, NewsTagId = addedId});
-                }
-            }
-     
+            var listMapping = (from tag in splitedTags 
+                               select _tagService.Add(tag) into addedId 
+                               where !IsAlreadyMapped(addedId, newsId) 
+                               select new NewsTagMapping {NewsId = newsId, NewsTagId = addedId}).ToList();
+
 
             _newsTagsContext.NewsTagMappings.AddRange(listMapping);
             _newsTagsContext.SaveChanges();
@@ -70,12 +62,12 @@ namespace TestApp.Services
                     on tag.Id equals tagMap.NewsTagId
                 group tag by tag.Name into pg
                 let tagNumber = pg.Count()
-                select new TagWidgetModel() {TagName = pg.Key, Count = tagNumber}).ToList();
+                select new TagWidgetModel {TagName = pg.Key, Count = tagNumber}).ToList();
 
         }
 
 
-        private IList<NewsTag> GetExistingNewsTags(int newsId)
+        private IEnumerable<NewsTag> GetExistingNewsTags(int newsId)
         {
             return (from tag in _newsTagsContext.NewsTags
                     join tagMapping in _newsTagsContext.NewsTagMappings

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using TestApp.Models.Domain;
 using TestApp.Services.Interfaces;
 
@@ -20,15 +17,12 @@ namespace TestApp.Services
 
         public int Add(string tagName)
         {
-            if (!IsTagAlreadyExit(tagName))
-            {
+            if (IsTagAlreadyExit(tagName)) return GetTagIdByName(tagName);
 
-                var addedTag = _newsTagsContext.NewsTags.Add(new NewsTag() { Name = tagName });
-                _newsTagsContext.SaveChanges();
+            var addedTag = _newsTagsContext.NewsTags.Add(new NewsTag { Name = tagName });
+            _newsTagsContext.SaveChanges();
 
-                return addedTag.Id;
-            }
-            return GetTagIdByName(tagName);
+            return addedTag.Id;
         }
 
         public int GetTagIdByName(string tagName)
@@ -43,12 +37,11 @@ namespace TestApp.Services
         public void Delete(string tagName)
         {
             var removedTag = _newsTagsContext.NewsTags.SingleOrDefault(x => x.Name == tagName);
-            if (removedTag != null)
-            {
-                RemoveMappingByTagId(removedTag.Id);
-                _newsTagsContext.NewsTags.Remove(removedTag);
-                _newsTagsContext.SaveChanges();
-            }
+            if (removedTag == null) return;
+
+            RemoveMappingByTagId(removedTag.Id);
+            _newsTagsContext.NewsTags.Remove(removedTag);
+            _newsTagsContext.SaveChanges();
         }
 
 

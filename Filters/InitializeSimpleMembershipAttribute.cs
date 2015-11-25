@@ -3,7 +3,6 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Threading;
 using System.Web.Mvc;
-using TestApp.Models;
 using TestApp.Models.Domain;
 using WebMatrix.WebData;
 

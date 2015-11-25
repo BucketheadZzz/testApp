@@ -24,8 +24,8 @@ namespace TestApp.Models.Domain
 
         public News()
         {
-            NewsTag_Mapping = new HashSet<NewsTag_Mapping>();
-            NewsFile_Mappings = new HashSet<NewsFile_Mapping>();
+            NewsTagMapping = new HashSet<NewsTagMapping>();
+            NewsFileMappings = new HashSet<NewsFileMapping>();
         }
 
         [Key]
@@ -40,9 +40,9 @@ namespace TestApp.Models.Domain
 
         public int CreatedBy { get; set; }
 
-        public virtual ICollection<NewsTag_Mapping> NewsTag_Mapping { get; set; }
+        public virtual ICollection<NewsTagMapping> NewsTagMapping { get; set; }
 
-        public virtual ICollection<NewsFile_Mapping> NewsFile_Mappings { get; set; } 
+        public virtual ICollection<NewsFileMapping> NewsFileMappings { get; set; } 
        
     }
 }
