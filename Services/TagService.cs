@@ -18,7 +18,7 @@ namespace TestApp.Services
 
     
 
-        public int AddTag(string tagName)
+        public int Add(string tagName)
         {
             if (!IsTagAlreadyExit(tagName))
             {
@@ -40,7 +40,7 @@ namespace TestApp.Services
 
     
 
-        public void RemoveTag(string tagName)
+        public void Delete(string tagName)
         {
             var removedTag = _newsTagsContext.NewsTags.SingleOrDefault(x => x.Name == tagName);
             if (removedTag != null)

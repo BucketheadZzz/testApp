@@ -5,10 +5,10 @@ namespace TestApp.Services.Interfaces
     public interface ITagService
     {
 
-        int AddTag(string tagName);
+        int Add(string tagName);
 
         int GetTagIdByName(string tagName);
-        void RemoveTag(string tagName);
+        void Delete(string tagName);
 
         bool IsTagAlreadyExit(string tag);
 

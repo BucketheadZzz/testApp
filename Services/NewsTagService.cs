@@ -42,7 +42,7 @@ namespace TestApp.Services
             var listMapping = new List<NewsTag_Mapping>();
             foreach (var tag in splitedTags)
             {
-                var addedId = _tagService.AddTag(tag);
+                var addedId = _tagService.Add(tag);
                 if (!IsAlreadyMapped(addedId, newsId))
                 {
                     listMapping.Add(new NewsTag_Mapping(){NewsId =  newsId, NewsTagId = addedId});

@@ -15,7 +15,7 @@
         <h1>Tags</h1>
         @foreach (var item in Model)
         {
-            <a href="#" class="btn btn-xs btn-primary"><span class="tags" style="font-size: @((13 + (item.Count * 4 )))px">@item.TagName</span></a>
+            <a href="/?tag=@item.TagName" class="btn btn-xs btn-primary"><span class="tags" style="font-size: @((13 + (item.Count * 4 )))px">@item.TagName</span></a>
         }
     </div>
 }

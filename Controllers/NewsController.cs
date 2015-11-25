@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using TestApp.Models;
 using TestApp.Models.Domain;
@@ -24,9 +25,10 @@ namespace TestApp.Controllers
 
 
 
-        public ActionResult List()
+        public ActionResult List(string tag)
         {
-            var model = _newsService.List();
+            var model = String.IsNullOrEmpty(tag) ? _newsService.List() : _newsService.GetNewsByTag(tag);
+
             return View(model);
         }
 

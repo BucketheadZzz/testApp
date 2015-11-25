@@ -86,5 +86,17 @@ namespace TestApp.Services
 
             }).ToList();
         }
+
+        public IList<NewsModel> GetNewsByTag(string tag)
+        {
+            return (from news in _newsContext.News where news.NewsTag_Mapping.Count(x => x.NewsTag.Name == tag) > 0 select  new NewsModel()
+            {
+                Created = news.Created,
+                CreatedBy = news.CreatedBy,
+                Title = news.Title,
+                ShortDescrpition = news.ShortDescrpition,
+                Id = news.Id
+            }).ToList() ;
+        }
     }
 }

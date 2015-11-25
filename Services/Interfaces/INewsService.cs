@@ -14,5 +14,7 @@ namespace TestApp.Services.Interfaces
         NewsModel GetById(int id);
 
         IList<NewsModel> List();
+
+        IList<NewsModel> GetNewsByTag(string tag);
     }
 }
