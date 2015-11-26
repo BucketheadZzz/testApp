@@ -19,7 +19,7 @@ namespace TestApp.Controllers
             ViewBag.IsAdmin = userService.IsUserInRole("Admin");
         }
 
-        //
+        
         // GET: /Account/Login
 
         [AllowAnonymous]
@@ -29,7 +29,7 @@ namespace TestApp.Controllers
             return View();
         }
 
-        //
+        
         // POST: /Account/Login
 
         [HttpPost]
@@ -43,11 +43,11 @@ namespace TestApp.Controllers
             }
 
             // If we got this far, something failed, redisplay form
-            ModelState.AddModelError("", "The user name or password provided is incorrect.");
+            ModelState.AddModelError(String.Empty, "The user name or password provided is incorrect.");
             return View(model);
         }
 
-        //
+        
         // POST: /Account/LogOff
 
         [HttpPost]
@@ -59,7 +59,6 @@ namespace TestApp.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        //
         // GET: /Account/Register
 
         [AllowAnonymous]
@@ -68,7 +67,7 @@ namespace TestApp.Controllers
             return View();
         }
 
-        //
+        
         // POST: /Account/Register
 
         [HttpPost]
@@ -92,7 +91,7 @@ namespace TestApp.Controllers
                 }
                 catch (MembershipCreateUserException e)
                 {
-                    ModelState.AddModelError("", ErrorCodeToString(e.StatusCode));
+                    ModelState.AddModelError(String.Empty, ErrorCodeToString(e.StatusCode));
                 }
             }
 
@@ -100,7 +99,7 @@ namespace TestApp.Controllers
             return View(model);
         }
 
-        //
+        
         // POST: /Account/Disassociate
 
         [HttpPost]
@@ -127,7 +126,7 @@ namespace TestApp.Controllers
             return RedirectToAction("Manage", new { Message = message });
         }
 
-        //
+        
         // GET: /Account/Manage
 
         public ActionResult Manage(ManageMessageId? message)
@@ -136,24 +135,23 @@ namespace TestApp.Controllers
                 message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
                 : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
                 : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
-                : "";
-            ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
+                : String.Empty;
+      
             ViewBag.ReturnUrl = Url.Action("Manage");
             return View();
         }
 
-        //
+        
         // POST: /Account/Manage
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Manage(LocalPasswordModel model)
         {
-            bool hasLocalAccount = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
-            ViewBag.HasLocalPassword = hasLocalAccount;
+
+         
             ViewBag.ReturnUrl = Url.Action("Manage");
-            if (hasLocalAccount)
-            {
+           
                 if (ModelState.IsValid)
                 {
                     // ChangePassword will throw an exception rather than return false in certain failure scenarios.
@@ -171,39 +169,16 @@ namespace TestApp.Controllers
                     {
                         return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
                     }
-                    ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
+                    ModelState.AddModelError(String.Empty, "The current password is incorrect or the new password is invalid.");
                 }
-            }
-            else
-            {
-                // User does not have a local password so remove any validation errors caused by a missing
-                // OldPassword field
-                ModelState state = ModelState["OldPassword"];
-                if (state != null)
-                {
-                    state.Errors.Clear();
-                }
-
-                if (ModelState.IsValid)
-                {
-                    try
-                    {
-                        WebSecurity.CreateAccount(User.Identity.Name, model.NewPassword);
-                        return RedirectToAction("Manage", new { Message = ManageMessageId.SetPasswordSuccess });
-                    }
-                    catch (Exception)
-                    {
-                        ModelState.AddModelError("", String.Format("Unable to create local account. An account with the name \"{0}\" may already exist.", User.Identity.Name));
-                    }
-                }
-            }
+            
 
             // If we got this far, something failed, redisplay form
             return View(model);
         }
 
    
-        //
+        
    
 
         #region Helpers
@@ -223,22 +198,6 @@ namespace TestApp.Controllers
             RemoveLoginSuccess,
         }
 
-        internal class ExternalLoginResult : ActionResult
-        {
-            public ExternalLoginResult(string provider, string returnUrl)
-            {
-                Provider = provider;
-                ReturnUrl = returnUrl;
-            }
-
-            public string Provider { get; private set; }
-            public string ReturnUrl { get; private set; }
-
-            public override void ExecuteResult(ControllerContext context)
-            {
-                OAuthWebSecurity.RequestAuthentication(Provider, ReturnUrl);
-            }
-        }
 
         private static string ErrorCodeToString(MembershipCreateStatus createStatus)
         {

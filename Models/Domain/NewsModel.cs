@@ -3,24 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration;
 
 namespace TestApp.Models.Domain
 {
 
-    public class NewsContext : DbContext
-    {
-        public NewsContext() : base("DefaultConnection")
-        {
-            
-        }
-
-        public DbSet<News> News { get; set; }
-    }
-
     [Table("News")]
-    public class News
+    public class News : EntityTypeConfiguration<News> 
     {
-
 
         public News()
         {

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using TestApp.DAL;
 using TestApp.Models.Domain;
 using TestApp.Services.Interfaces;
 
@@ -9,39 +10,37 @@ namespace TestApp.Services
     public class NewsFileService: INewsFileService
     {
         private readonly IFileService _fileService;
-        private readonly FileContext _context;
+        private readonly IRepository<NewsFileMapping> _repositoryFileMapping; 
 
-        public NewsFileService(IFileService fileService, FileContext context)
+        public NewsFileService(IFileService fileService, IRepository<NewsFileMapping> repositoryFileMapping)
         {
             _fileService = fileService;
-            _context = context;
+            _repositoryFileMapping = repositoryFileMapping;
         }
 
         public void AddFileMappingToNews(IList<HttpPostedFileWrapper> files, int newsId)
         {
             var listMapping = files.Select(file => _fileService.Add(file)).Select(addedId => new NewsFileMapping {FileId = addedId, NewsId = newsId}).ToList();
 
-            _context.NewsFilesMappings.AddRange(listMapping);
-            _context.SaveChanges();
+            _repositoryFileMapping.Insert(listMapping);
+
         }
 
         public void RemoveMappingByNewsId(int newsId)
         {
-            var removedList = _context.NewsFilesMappings.Where(x => x.NewsId == newsId);
+            var removedList = _repositoryFileMapping.Table.Where(x => x.NewsId == newsId);
 
-            _context.NewsFilesMappings.RemoveRange(removedList);
-            _context.SaveChanges();
+            _repositoryFileMapping.Delete(removedList);
 
             _fileService.Delete(removedList.Select(x => x.FileId).ToArray());
         }
 
         public void RemoveMappingByNewsIdAndFileId(int newsId, int fileId)
         {
-            var removedItem = _context.NewsFilesMappings.SingleOrDefault(x => x.FileId == fileId && x.NewsId == newsId);
+            var removedItem = _repositoryFileMapping.Table.SingleOrDefault(x => x.FileId == fileId && x.NewsId == newsId);
             if (removedItem != null)
             {
-                _context.NewsFilesMappings.Remove(removedItem);
-                _context.SaveChanges();
+                _repositoryFileMapping.Delete(removedItem);
 
                 _fileService.Delete(fileId);
             }
@@ -49,8 +48,8 @@ namespace TestApp.Services
 
         public IList<File> GetFilesByNewsId(int newsId)
         {
-            return (from file in _context.Files
-                join fileMapping in _context.NewsFilesMappings on file.Id equals fileMapping.FileId
+            return (from file in _fileService.GetAll()
+                join fileMapping in _repositoryFileMapping.Table on file.Id equals fileMapping.FileId
                 where fileMapping.NewsId == newsId
                 select new File
                 {

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using TestApp.DAL;
 using TestApp.Models.Domain;
 using TestApp.Services.Interfaces;
 
@@ -6,28 +7,31 @@ namespace TestApp.Services
 {
     public class TagService : ITagService
     {
-        private readonly NewsTagsContext _newsTagsContext;
+        private readonly IRepository<Tag> _TagsContext;
 
-        public TagService(NewsTagsContext newsTagsContext)
+        public TagService(IRepository<Tag> TagsContext)
         {
-            _newsTagsContext = newsTagsContext;
+            _TagsContext = TagsContext;
         }
 
-    
+
+        public IQueryable<Tag> GetAll()
+        {
+            return _TagsContext.Table;
+        }
 
         public int Add(string tagName)
         {
             if (IsTagAlreadyExit(tagName)) return GetTagIdByName(tagName);
 
-            var addedTag = _newsTagsContext.NewsTags.Add(new NewsTag { Name = tagName });
-            _newsTagsContext.SaveChanges();
-
+            var addedTag = _TagsContext.Insert(new Tag { Name = tagName });
+       
             return addedTag.Id;
         }
 
         public int GetTagIdByName(string tagName)
         {
-            var tag = _newsTagsContext.NewsTags.SingleOrDefault(x => x.Name == tagName);
+            var tag = _TagsContext.Table.SingleOrDefault(x => x.Name == tagName);
 
             return tag != null ? tag.Id : -1;
         }
@@ -36,18 +40,17 @@ namespace TestApp.Services
 
         public void Delete(string tagName)
         {
-            var removedTag = _newsTagsContext.NewsTags.SingleOrDefault(x => x.Name == tagName);
+            var removedTag = _TagsContext.Table.SingleOrDefault(x => x.Name == tagName);
             if (removedTag == null) return;
 
-            _newsTagsContext.NewsTags.Remove(removedTag);
-            _newsTagsContext.SaveChanges();
+            _TagsContext.Delete(removedTag);
         }
 
 
 
         public bool IsTagAlreadyExit(string tag)
         {
-            return _newsTagsContext.NewsTags.Any(x => x.Name == tag);
+            return _TagsContext.Table.Any(x => x.Name == tag);
         }
 
       

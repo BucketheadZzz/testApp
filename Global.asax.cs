@@ -12,6 +12,8 @@ namespace TestApp
     {
         protected void Application_Start()
         {
+           
+            AutofacAppDependencyResolver.ConfigureContainer();
             AreaRegistration.RegisterAllAreas();
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using TestApp.DAL;
 using TestApp.Extensions;
 using TestApp.Models;
 using TestApp.Models.Domain;
@@ -11,28 +12,34 @@ namespace TestApp.Services
 {
     public class NewsService : INewsService
     {
-        private readonly NewsContext _newsContext;
+        private readonly IRepository<News> _newsContext;
         private readonly INewsTagService _newsTagService;
         private readonly INewsFileService _fileService;
 
-        public NewsService(NewsContext newsContext, INewsTagService newsTagService, INewsFileService fileService)
+        public NewsService( INewsTagService newsTagService, INewsFileService fileService, IRepository<News> newsContext)
         {
-            _newsContext = newsContext;
+        
             _newsTagService = newsTagService;
             _fileService = fileService;
+            _newsContext = newsContext;
+        }
+
+        public IQueryable<News> GetAll()
+        {
+            return _newsContext.Table;
         }
 
         public void Add(NewsModel item)
         {
             var entity = item.ToEntity();
-            _newsContext.News.Add(entity);
-            _newsContext.SaveChanges();
+
+            _newsContext.Insert(entity);
 
             if (!String.IsNullOrEmpty(item.Tags))
             {
                 _newsTagService.SaveTagsMappingToNews(item.Tags, entity.Id);
             }
-            if (item.Files.Count > 0)
+            if (item.Files.Count > 0 & item.Files[0] != null)
             {
                _fileService.AddFileMappingToNews(item.Files,entity.Id);
             }
@@ -42,16 +49,13 @@ namespace TestApp.Services
         {
             var entity = item.ToEntity();
 
-            _newsContext.News.Attach(entity);
-            var entry = _newsContext.Entry(entity);
-            entry.State = EntityState.Modified;
-            _newsContext.SaveChanges();
+            _newsContext.Update(entity);
 
             if (!String.IsNullOrEmpty(item.Tags))
             {
                 _newsTagService.SaveTagsMappingToNews(item.Tags, entity.Id);
             }
-            if (item.Files.Count > 0)
+            if (item.Files.Count > 0 & item.Files[0] != null)
             {
                 _fileService.AddFileMappingToNews(item.Files, entity.Id);
             }
@@ -60,21 +64,19 @@ namespace TestApp.Services
 
         public void Delete(int id)
         {
-            var removedItem = GetById(id);
+            var removedItem = _newsContext.GetById(id);
             if (removedItem != null)
             {
                 _newsTagService.RemoveMappingByNewsId(id);
                 _fileService.RemoveMappingByNewsId(id);
-                var entity = removedItem.ToEntity();
-                _newsContext.News.Remove(entity);
-                _newsContext.SaveChanges();
+                _newsContext.Delete(removedItem);
             }
 
         }
 
         public NewsModel GetById(int id)
         {
-            var enity = _newsContext.News.SingleOrDefault(x => x.Id == id);
+            var enity = _newsContext.Table.SingleOrDefault(x => x.Id == id);
             if (enity != null)
             {
                 var model = enity.ToModel();
@@ -87,14 +89,14 @@ namespace TestApp.Services
 
         public IList<NewsModel> List()
         {
-            return _newsContext.News.Select(x => x).ToListModel();
+            return _newsContext.Table.Select(x => x).ToListModel();
         }
 
         public IList<NewsModel> GetNewsByTag(string tag)
         {
             return
-                (from news in _newsContext.News
-                    where news.NewsTagMapping.Count(x => x.NewsTag.Name == tag) > 0
+                (from news in _newsContext.Table
+                    where news.NewsTagMapping.Count(x => x.Tag.Name == tag) > 0
                     select news).ToListModel();
         }
     }

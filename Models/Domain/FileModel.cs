@@ -1,23 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration;
 
 namespace TestApp.Models.Domain
 {
-    public class FileContext: DbContext
-    {
-        public FileContext()
-            : base("DefaultConnection")
-        {
-        }
-
-        public DbSet<File> Files { get; set; }
-
-        public DbSet<NewsFileMapping> NewsFilesMappings { get; set; }
-    }
 
     [Table("File")]
-    public class File
+    public class File : EntityTypeConfiguration<File> 
     {
         public File()
         {
@@ -32,11 +23,10 @@ namespace TestApp.Models.Domain
         public string FileName { get; set; }
 
         public virtual ICollection<NewsFileMapping> NewsFilesMappings { get; set; } 
-       // public ICollection<> 
     }
 
     [Table("NewsFile_Mapping")]
-    public class NewsFileMapping
+    public class NewsFileMapping : EntityTypeConfiguration<NewsFileMapping> 
     {
         public int Id { get; set; }
 

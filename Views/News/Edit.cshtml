@@ -32,7 +32,7 @@
             @Html.TextBoxFor(x => x.Tags, new { data_role = "tagsinput" })
 
         </div>
-        if (Model.NewsFilesMappings.Any())
+        if (Model.NewsFilesMappings != null && Model.NewsFilesMappings.Any())
         {
             <div class="form-group">
                 <label>Existing files</label>

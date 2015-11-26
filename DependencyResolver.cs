@@ -1,46 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 using System.Web.Mvc;
-using Ninject;
+using Autofac;
+using Autofac.Integration.Mvc;
+using TestApp.DAL;
 using TestApp.Models.Domain;
 using TestApp.Services;
 using TestApp.Services.Interfaces;
 
 namespace TestApp
 {
-    public class NiDependencyResolver: IDependencyResolver
+    public class AutofacAppDependencyResolver 
     {
-        private readonly IKernel _kernel;
-
-        public NiDependencyResolver(IKernel kernel)
+        public static void ConfigureContainer()
         {
-            _kernel = kernel;
-            AddBindings();
-        }
-        public object GetService(Type serviceType)
-        {
-            return _kernel.TryGet(serviceType);
-        }
+            var builder = new ContainerBuilder();
 
-        public IEnumerable<object> GetServices(Type serviceType)
-        {
-            return _kernel.GetAll(serviceType);
-        }
+            // Register dependencies in controllers
+            builder.RegisterControllers(typeof(MvcApplication).Assembly);
 
-        private void AddBindings()
-        {
-            _kernel.Bind<NewsContext>().To<NewsContext>();
-            _kernel.Bind<UserRolesContext>().To<UserRolesContext>();
-            _kernel.Bind<NewsTagsContext>().To<NewsTagsContext>();
-            _kernel.Bind<FileContext>().To<FileContext>();
+            // Register dependencies in filter attributes
+            builder.RegisterFilterProvider();
 
-            _kernel.Bind<IUserService>().To<UserService>();
-            _kernel.Bind<INewsService>().To<NewsService>();
-            _kernel.Bind<ITagService>().To<TagService>();
-            _kernel.Bind<INewsTagService>().To<NewsTagService>();
-            _kernel.Bind<IFileService>().To<FileService>();
-            _kernel.Bind<INewsFileService>().To<NewsFileService>();
+            // Register dependencies in custom views
+         //   builder.RegisterSource(new ViewRegistrationSource());
 
+            // Register our Data dependencies
+            builder.Register<IDbContext>(c => new ObjectContext()).InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+          //  builder.RegisterType<Repository<News>>().As<IRepository<News>>().InstancePerLifetimeScope();
+
+
+
+
+            builder.RegisterType<UserService>().As<IUserService>().InstancePerLifetimeScope();
+            builder.RegisterType<FileService>().As<IFileService>().InstancePerLifetimeScope();
+            builder.RegisterType<TagService>().As<ITagService>().InstancePerLifetimeScope();
+            builder.RegisterType<NewsService>().As<INewsService>().InstancePerLifetimeScope();
+            builder.RegisterType<NewsFileService>().As<INewsFileService>().InstancePerLifetimeScope();
+            builder.RegisterType<NewsTagService>().As<INewsTagService>().InstancePerLifetimeScope();
+
+            var container = builder.Build();
+
+            // Set MVC DI resolver to use our Autofac container
+            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
         }
     }
 }

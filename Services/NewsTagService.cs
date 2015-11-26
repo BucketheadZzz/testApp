@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TestApp.DAL;
 using TestApp.Models;
 using TestApp.Models.Domain;
 using TestApp.Services.Interfaces;
@@ -9,13 +10,14 @@ namespace TestApp.Services
     public class NewsTagService: INewsTagService
     {
 
-        private readonly NewsTagsContext _newsTagsContext;
+        private readonly IRepository<NewsTagMapping> _newsTagsMappingContext;
         private readonly ITagService _tagService;
+  
 
-        public NewsTagService(NewsTagsContext newsTagsContext, ITagService tagService)
+        public NewsTagService( ITagService tagService,  IRepository<NewsTagMapping> newsTagsMappingContext)
         {
-            _newsTagsContext = newsTagsContext;
             _tagService = tagService;
+            _newsTagsMappingContext = newsTagsMappingContext;
         }
 
 
@@ -26,40 +28,35 @@ namespace TestApp.Services
             var existingTags = GetExistingNewsTags(newsId);
 
             var tagsToDelete = existingTags.Where(existTag => !splitedTags.Contains(existTag.Name)).
-                Select(tag => _newsTagsContext.NewsTagMappings.SingleOrDefault(x => x.NewsId == newsId && x.NewsTagId == tag.Id)).
+                Select(tag => _newsTagsMappingContext.Table.SingleOrDefault(x => x.NewsId == newsId && x.TagId == tag.Id)).
                 Where(deletedMapping => deletedMapping != null).
                 ToList();
 
             if (tagsToDelete.Any())
             {
-                _newsTagsContext.NewsTagMappings.RemoveRange(tagsToDelete);
-                _newsTagsContext.SaveChanges();
+                _newsTagsMappingContext.Delete(tagsToDelete);
             }
 
             var listMapping = (from tag in splitedTags 
                                select _tagService.Add(tag) into addedId 
                                where !IsAlreadyMapped(addedId, newsId) 
-                               select new NewsTagMapping {NewsId = newsId, NewsTagId = addedId}).ToList();
+                               select new NewsTagMapping {NewsId = newsId, TagId = addedId}).ToList();
 
 
-            _newsTagsContext.NewsTagMappings.AddRange(listMapping);
-            _newsTagsContext.SaveChanges();
+            _newsTagsMappingContext.Insert(listMapping);
         }
 
         public void RemoveMappingByNewsId(int newsId)
         {
-            var removedList = _newsTagsContext.NewsTagMappings.Where(x => x.NewsId == newsId);
-
-            _newsTagsContext.NewsTagMappings.RemoveRange(removedList);
-            _newsTagsContext.SaveChanges();
-
+            var removedList = _newsTagsMappingContext.Table.Where(x => x.NewsId == newsId);
+            _newsTagsMappingContext.Delete(removedList);
         }
 
         public IList<TagWidgetModel> GetNewsTagsList()
         {
-            return (from tag in _newsTagsContext.NewsTags
-                join tagMap in _newsTagsContext.NewsTagMappings
-                    on tag.Id equals tagMap.NewsTagId
+            return (from tag in _tagService.GetAll()
+                join tagMap in _newsTagsMappingContext.Table
+                    on tag.Id equals tagMap.TagId
                 group tag by tag.Name into pg
                 let tagNumber = pg.Count()
                 select new TagWidgetModel {TagName = pg.Key, Count = tagNumber}).ToList();
@@ -67,11 +64,11 @@ namespace TestApp.Services
         }
 
 
-        private IEnumerable<NewsTag> GetExistingNewsTags(int newsId)
+        private IEnumerable<Tag> GetExistingNewsTags(int newsId)
         {
-            return (from tag in _newsTagsContext.NewsTags
-                    join tagMapping in _newsTagsContext.NewsTagMappings
-                        on tag.Id equals tagMapping.NewsTagId
+            return (from tag in _tagService.GetAll()
+                    join tagMapping in _newsTagsMappingContext.Table
+                        on tag.Id equals tagMapping.TagId
                     where tagMapping.NewsId == newsId
                     select tag).ToList();
         }
@@ -79,9 +76,9 @@ namespace TestApp.Services
 
         public string GetTagsByNewsId(int newsId)
         {
-            var tagList = (from tag in _newsTagsContext.NewsTags
-                           join tagMapping in _newsTagsContext.NewsTagMappings
-                               on tag.Id equals tagMapping.NewsTagId
+            var tagList = (from tag in _tagService.GetAll()
+                           join tagMapping in _newsTagsMappingContext.Table
+                               on tag.Id equals tagMapping.TagId
                            where tagMapping.NewsId == newsId
                            select tag.Name).ToList();
 
@@ -90,14 +87,14 @@ namespace TestApp.Services
 
         public bool IsAlreadyMapped(int tagId, int newsId)
         {
-            return _newsTagsContext.NewsTagMappings.Any(x => x.NewsId == newsId && x.NewsTagId == tagId);
+            return _newsTagsMappingContext.Table.Any(x => x.NewsId == newsId && x.TagId == tagId);
         }
 
         public void RemoveMappingByTagId(int tagId)
         {
-            var tags = _newsTagsContext.NewsTagMappings.Where(x => x.NewsTagId == tagId);
-            _newsTagsContext.NewsTagMappings.RemoveRange(tags);
-            _newsTagsContext.SaveChanges();
+            var tags = _newsTagsMappingContext.Table.Where(x => x.TagId == tagId);
+            _newsTagsMappingContext.Delete(tags);
+
         }
 
     }

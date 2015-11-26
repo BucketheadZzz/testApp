@@ -2,27 +2,15 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration;
 
 namespace TestApp.Models.Domain
 {
-    public class NewsTagsContext: DbContext
-    {
-        public NewsTagsContext()
-            : base("DefaultConnection")
-        {
-            
-        }
-
-        public DbSet<NewsTagMapping> NewsTagMappings { get; set; }
-
-        public DbSet<NewsTag> NewsTags { get; set; }
-    }
-
-    [Table("NewsTag")]
-    public class NewsTag
+    [Table("Tag")]
+    public class Tag : EntityTypeConfiguration<Tag> 
     {
 
-        public NewsTag()
+        public Tag()
         {
             NewsTagMapping = new HashSet<NewsTagMapping>();
         }
@@ -37,20 +25,19 @@ namespace TestApp.Models.Domain
     }
 
     [Table("NewsTag_Mapping")]
-    public class NewsTagMapping
+    public class NewsTagMapping : EntityTypeConfiguration<NewsTagMapping> 
     {
-
-        
+    
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         public int NewsId { get; set; }
 
-        public int NewsTagId { get; set; }
+        public int TagId { get; set; }
 
         public virtual News News { get; set; }
-        public virtual NewsTag NewsTag { get; set; }
+        public virtual Tag Tag { get; set; }
        
     }
 }
