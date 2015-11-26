@@ -6,11 +6,11 @@ namespace TestApp.Services.Interfaces
 {
     public interface INewsFileService
     {
-        void AddFileMappingToNews(IList<HttpPostedFileWrapper> files, int newsId);
+        void AddMapping(IList<HttpPostedFileWrapper> files, int newsId);
 
-        void RemoveMappingByNewsId(int newsId);
+        void RemoveMapping(int newsId);
 
-        void RemoveMappingByNewsIdAndFileId(int newsId, int fileId);
+        void RemoveMapping(int newsId, int fileId);
 
         IList<File> GetFilesByNewsId(int newsId);
     }

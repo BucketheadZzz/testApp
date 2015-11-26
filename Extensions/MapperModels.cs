@@ -12,6 +12,9 @@ namespace TestApp.Extensions
         {
             Mapper.CreateMap<News, NewsModel>().ForMember(x => x.NewsFilesMappings,y => y.MapFrom(z => z.NewsFileMappings));
             Mapper.CreateMap<NewsModel, News>();
+
+            Mapper.CreateMap<Playlist, PlaylistModel>().ForMember(x => x.PlayListFilesMappings, y => y.MapFrom(z => z.PlayListFileMapping));
+            Mapper.CreateMap<PlaylistModel, Playlist>();
         }
 
         public static NewsModel ToModel(this News ent)
@@ -29,5 +32,22 @@ namespace TestApp.Extensions
             return Mapper.Map<NewsModel, News>(model);
         }
 
+
+
+        public static PlaylistModel ToModel(this Playlist ent)
+        {
+            return Mapper.Map<Playlist, PlaylistModel>(ent);
+        }
+
+        public static Playlist ToEntity(this PlaylistModel model)
+        {
+            return Mapper.Map<PlaylistModel, Playlist>(model);
+        }
+
+        public static IList<PlaylistModel> ToListModel(this IEnumerable<Playlist> ent)
+        {
+            return Mapper.Map<IEnumerable<Playlist>, IList<PlaylistModel>>(ent);
+        }
+     
     }
 }

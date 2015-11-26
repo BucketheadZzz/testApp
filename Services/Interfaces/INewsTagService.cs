@@ -5,16 +5,18 @@ namespace TestApp.Services.Interfaces
 {
     public interface INewsTagService
     {
-        void SaveTagsMappingToNews(string tags, int newsId);
+        void SaveTagsMapping(string tags, int newsId);
 
-        void RemoveMappingByNewsId(int newsId);
+        void RemoveMapping(int newsId);
+
+        void RemoveMappingByTagId(int tagId);
 
         IList<TagWidgetModel> GetNewsTagsList(); 
 
         string GetTagsByNewsId(int newsId);
 
-        bool IsAlreadyMapped(int tagId, int newsId);
+        bool AlreadyMapped(int tagId, int newsId);
 
-        void RemoveMappingByTagId(int tagId);
+      
     }
 }

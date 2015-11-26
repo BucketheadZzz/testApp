@@ -1,0 +1,71 @@
+﻿@model TestApp.Models.PlaylistModel
+
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/bootstrap/css/bootstrap-tagsinput.css")" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="@Url.Content("~/Content/bootstrap/js/bootstrap.js")"></script>
+<script src="@Url.Content("~/Content/bootstrap/js/bootstrap-tagsinput.js")"></script>
+<style>
+    .file-table img {
+        max-width: 150px;
+    }
+</style>
+<h1>Edit item</h1>
+<div class="edit-form">
+    @using (Html.BeginForm("Edit", "Playlist", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.HiddenFor(x => x.Id)
+        @Html.HiddenFor(x => x.CreatedBy)
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.Name)
+            @Html.TextBoxFor(x => x.Name, new { @class = "form-control", required = "required" })
+            @Html.ValidationMessageFor(x => x.Name)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Description)
+            @Html.TextAreaFor(x => x.Description, new { @class = "form-control", required = "required", style = "min-height: 200px;" })
+            @Html.ValidationMessageFor(x => x.Description)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Tags)
+            @Html.TextBoxFor(x => x.Tags, new { data_role = "tagsinput" })
+
+        </div>
+        if (Model.PlayListFilesMappings != null && Model.PlayListFilesMappings.Any())
+        {
+            <div class="form-group">
+                <label>Existing files</label>
+                <table class="table file-table">
+                    @foreach (var item in Model.PlayListFilesMappings)
+                    {
+                        <tr>
+                            <td>
+                                @item.File.FileName
+                            </td>
+                            <td>
+                                @switch (item.File.ContentType)
+                                {
+                                    case "audio/mp3":
+                                    <audio controls>
+                                        <source src="data:audio/mpeg;base64,@Convert.ToBase64String(item.File.BinaryData)" type="audio/mpeg" />
+                                        <em>Sorry, your browser doesn't support HTML5 audio.</em>
+                                    </audio>
+                                        break;
+                                }
+                            </td>
+                            <td>
+                                @Html.ActionLink("Delete", "DeleteFileFromPlaylist", "Playlist", new { newsId = Model.Id, fileId = item.File.Id }, new { @class = "btn btn-xs btn-danger" })
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        }
+
+        <div class="form-group">
+            <label>Attachments</label>
+            <input type="file" id="Files" name="Files" multiple />
+        </div>
+        <input type="submit" class="btn btn-default" value="Save" />
+    }
+</div>

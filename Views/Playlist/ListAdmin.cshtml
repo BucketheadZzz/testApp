@@ -1,0 +1,18 @@
+﻿@model IList<TestApp.Models.PlaylistModel>
+
+<h1>Admin list</h1>
+@Html.ActionLink("Add new","Edit","Playlist",null, new { @class = "btn btn-default"})
+@if (Model.Any())
+{
+    <table class="table">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Description</td>
+                <td>@Html.ActionLink("Edit", "Edit", "Playlist", new { id = @item.Id }, new { @class = "btn btn-default btn-xs" })</td>
+                <td>@Html.ActionLink("Delete", "Delete", "Playlist", new { id = @item.Id }, new { @class = "btn btn-default btn-xs" })</td>
+            </tr>
+        }
+    </table>
+}

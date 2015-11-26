@@ -171,6 +171,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\PlaylistController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="DAL\IDbContext.cs" />
@@ -187,19 +188,27 @@
     <Compile Include="Models\Domain\NewsModel.cs" />
     <Compile Include="Models\Domain\NewsTagsModel.cs" />
     <Compile Include="Models\Domain\FileModel.cs" />
+    <Compile Include="Models\Domain\PlaylistModel.cs" />
     <Compile Include="Models\Domain\UserRolesModel.cs" />
     <Compile Include="Models\NewsModel.cs" />
+    <Compile Include="Models\PlaylistModel.cs" />
     <Compile Include="Models\TagWidgetModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Interfaces\INewsFileService.cs" />
     <Compile Include="Services\Interfaces\INewsService.cs" />
     <Compile Include="Services\Interfaces\INewsTagService.cs" />
     <Compile Include="Services\Interfaces\IFileService.cs" />
+    <Compile Include="Services\Interfaces\IPlaylistFileService.cs" />
+    <Compile Include="Services\Interfaces\IPlaylistService.cs" />
+    <Compile Include="Services\Interfaces\IPlaylistTagService.cs" />
     <Compile Include="Services\Interfaces\ITagService.cs" />
+    <Compile Include="Services\PlaylistFileService.cs" />
     <Compile Include="Services\NewsFileService.cs" />
     <Compile Include="Services\NewsService.cs" />
+    <Compile Include="Services\PlaylistTagService.cs" />
     <Compile Include="Services\NewsTagService.cs" />
     <Compile Include="Services\FileService.cs" />
+    <Compile Include="Services\PlaylistService.cs" />
     <Compile Include="Services\TagService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Services\Interfaces\IUserService.cs" />
@@ -226,6 +235,12 @@
     <Content Include="Content\bootstrap\js\bootstrap.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\jplayer\css\jplayer.blue.monday.css" />
+    <Content Include="Content\jplayer\image\jplayer.blue.monday.jpg" />
+    <Content Include="Content\jplayer\image\jplayer.blue.monday.seeking.gif" />
+    <Content Include="Content\jplayer\image\jplayer.blue.monday.video.play.png" />
+    <Content Include="Content\jplayer\js\jplayer.playlist.min.js" />
+    <Content Include="Content\jplayer\js\jquery.jplayer.min.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\bootstrap\config.json" />
@@ -281,6 +296,9 @@
     <Content Include="Views\News\Edit.cshtml" />
     <Content Include="Views\News\ListAdmin.cshtml" />
     <Content Include="Views\News\NewsTagsWidget.cshtml" />
+    <Content Include="Views\Playlist\List.cshtml" />
+    <Content Include="Views\Playlist\ListAdmin.cshtml" />
+    <Content Include="Views\Playlist\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

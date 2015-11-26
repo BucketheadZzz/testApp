@@ -18,7 +18,7 @@ namespace TestApp.Services
             _repositoryFileMapping = repositoryFileMapping;
         }
 
-        public void AddFileMappingToNews(IList<HttpPostedFileWrapper> files, int newsId)
+        public void AddMapping(IList<HttpPostedFileWrapper> files, int newsId)
         {
             var listMapping = files.Select(file => _fileService.Add(file)).Select(addedId => new NewsFileMapping {FileId = addedId, NewsId = newsId}).ToList();
 
@@ -26,7 +26,7 @@ namespace TestApp.Services
 
         }
 
-        public void RemoveMappingByNewsId(int newsId)
+        public void RemoveMapping(int newsId)
         {
             var removedList = _repositoryFileMapping.Table.Where(x => x.NewsId == newsId);
 
@@ -35,7 +35,7 @@ namespace TestApp.Services
             _fileService.Delete(removedList.Select(x => x.FileId).ToArray());
         }
 
-        public void RemoveMappingByNewsIdAndFileId(int newsId, int fileId)
+        public void RemoveMapping(int newsId, int fileId)
         {
             var removedItem = _repositoryFileMapping.Table.SingleOrDefault(x => x.FileId == fileId && x.NewsId == newsId);
             if (removedItem != null)

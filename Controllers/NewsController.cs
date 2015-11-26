@@ -80,7 +80,7 @@ namespace TestApp.Controllers
 
         public ActionResult DeleteFileFromNew(int newsId, int fileId)
         {
-            _newsFileService.RemoveMappingByNewsIdAndFileId(newsId,fileId);
+            _newsFileService.RemoveMapping(newsId,fileId);
 
             return RedirectToAction("Edit", new {id = newsId});
         }

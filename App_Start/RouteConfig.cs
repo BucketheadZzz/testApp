@@ -16,29 +16,51 @@ namespace TestApp
             );
 
             routes.MapRoute(
-         name: "NewsList",
-         url: "{controller}/{action}",
-         defaults: new { controller = "News", action = "List" }
-     );
+            name: "NewsList",
+            url: "{controller}/{action}",
+            defaults: new { controller = "News", action = "List" }
+            );
 
             routes.MapRoute(
- name: "NewsListAdmin",
- url: "{controller}/{action}",
- defaults: new { controller = "News", action = "ListAdmin" }
-);
+            name: "NewsListAdmin",
+            url: "{controller}/{action}",
+            defaults: new { controller = "News", action = "ListAdmin" }
+            );
 
             routes.MapRoute(
-name: "NewsItemEdit",
-url: "{controller}/{action}/{id}",
-defaults: new { controller = "News", action = "Edit", id = UrlParameter.Optional }
-);
+            name: "NewsItemEdit",
+            url: "{controller}/{action}/{id}",
+            defaults: new { controller = "News", action = "Edit", id = UrlParameter.Optional }
+            );
 
 
             routes.MapRoute(
-name: "NewsTagsWidget",
-url: "{controller}/{action}",
-defaults: new { controller = "News", action = "NewsTagsWidget" }
-);
+            name: "NewsTagsWidget",
+            url: "{controller}/{action}",
+            defaults: new { controller = "News", action = "NewsTagsWidget" }
+            );
+
+
+
+         
+
+            routes.MapRoute(
+            name: "PlaylistList",
+            url: "{controller}/{action}",
+            defaults: new { controller = "Playlist", action = "List" }
+            );
+
+            routes.MapRoute(
+            name: "PlaylistListAdmin",
+            url: "{controller}/{action}",
+            defaults: new { controller = "Playlist", action = "ListAdmin" }
+            );
+
+            routes.MapRoute(
+            name: "PlaylistItemEdit",
+            url: "{controller}/{action}/{id}",
+            defaults: new { controller = "Playlist", action = "Edit", id = UrlParameter.Optional }
+            );
 
 
 

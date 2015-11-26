@@ -19,7 +19,7 @@ namespace TestApp.Controllers
             ViewBag.IsAdmin = userService.IsUserInRole("Admin");
         }
 
-        
+
         // GET: /Account/Login
 
         [AllowAnonymous]
@@ -29,7 +29,7 @@ namespace TestApp.Controllers
             return View();
         }
 
-        
+
         // POST: /Account/Login
 
         [HttpPost]
@@ -47,7 +47,7 @@ namespace TestApp.Controllers
             return View(model);
         }
 
-        
+
         // POST: /Account/LogOff
 
         [HttpPost]
@@ -67,7 +67,7 @@ namespace TestApp.Controllers
             return View();
         }
 
-        
+
         // POST: /Account/Register
 
         [HttpPost]
@@ -85,7 +85,7 @@ namespace TestApp.Controllers
 
                     if (model.IsAdmin)
                     {
-                        Roles.AddUserToRole(model.UserName,"Admin");
+                        Roles.AddUserToRole(model.UserName, "Admin");
                     }
                     return RedirectToAction("Index", "Home");
                 }
@@ -99,7 +99,7 @@ namespace TestApp.Controllers
             return View(model);
         }
 
-        
+
         // POST: /Account/Disassociate
 
         [HttpPost]
@@ -110,7 +110,7 @@ namespace TestApp.Controllers
             ManageMessageId? message = null;
 
             // Only disassociate the account if the currently logged in user is the owner
-            if (ownerAccount != User.Identity.Name) return RedirectToAction("Manage", new {Message = message});
+            if (ownerAccount != User.Identity.Name) return RedirectToAction("Manage", new { Message = message });
             // Use a transaction to prevent the user from deleting their last login credential
             using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.Serializable }))
             {
@@ -126,7 +126,7 @@ namespace TestApp.Controllers
             return RedirectToAction("Manage", new { Message = message });
         }
 
-        
+
         // GET: /Account/Manage
 
         public ActionResult Manage(ManageMessageId? message)
@@ -136,12 +136,11 @@ namespace TestApp.Controllers
                 : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
                 : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
                 : String.Empty;
-      
+
             ViewBag.ReturnUrl = Url.Action("Manage");
             return View();
         }
 
-        
         // POST: /Account/Manage
 
         [HttpPost]
@@ -149,37 +148,36 @@ namespace TestApp.Controllers
         public ActionResult Manage(LocalPasswordModel model)
         {
 
-         
             ViewBag.ReturnUrl = Url.Action("Manage");
-           
-                if (ModelState.IsValid)
-                {
-                    // ChangePassword will throw an exception rather than return false in certain failure scenarios.
-                    bool changePasswordSucceeded;
-                    try
-                    {
-                        changePasswordSucceeded = WebSecurity.ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword);
-                    }
-                    catch (Exception)
-                    {
-                        changePasswordSucceeded = false;
-                    }
 
-                    if (changePasswordSucceeded)
-                    {
-                        return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
-                    }
-                    ModelState.AddModelError(String.Empty, "The current password is incorrect or the new password is invalid.");
+            if (ModelState.IsValid)
+            {
+                // ChangePassword will throw an exception rather than return false in certain failure scenarios.
+                bool changePasswordSucceeded;
+                try
+                {
+                    changePasswordSucceeded = WebSecurity.ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword);
                 }
-            
+                catch (Exception)
+                {
+                    changePasswordSucceeded = false;
+                }
+
+                if (changePasswordSucceeded)
+                {
+                    return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
+                }
+                ModelState.AddModelError(String.Empty, "The current password is incorrect or the new password is invalid.");
+            }
+
 
             // If we got this far, something failed, redisplay form
             return View(model);
         }
 
-   
-        
-   
+
+
+
 
         #region Helpers
         private ActionResult RedirectToLocal(string returnUrl)

@@ -22,10 +22,7 @@ namespace TestApp.Filters
             {
                 LazyInitializer.EnsureInitialized(ref _initializer, ref _isInitialized, ref _initializerLock);
             }
-            
         }
-
-
 
         private class SimpleMembershipInitializer
         {

@@ -38,6 +38,5 @@ namespace TestApp.Models.Domain
 
         public virtual News News { get; set; }
 
-
     }
 }

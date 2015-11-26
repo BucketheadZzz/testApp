@@ -23,13 +23,16 @@ namespace TestApp.DAL
             get
             {
                 if (_entities == null)
+                {
                     _entities = _dbContext.Set<T>();
+                }
+
                 return _entities;
             }
         }
 
 
-   
+
 
         public virtual IQueryable<T> Table
         {
@@ -48,10 +51,11 @@ namespace TestApp.DAL
         {
 
             if (ent == null)
+            {
                 throw new ArgumentNullException("ent");
+            }
 
             Entities.Add(ent);
-
             _dbContext.SaveChanges();
             return ent;
         }
@@ -59,10 +63,14 @@ namespace TestApp.DAL
         public void Insert(IEnumerable<T> ent)
         {
             if (ent == null)
+            {
                 throw new ArgumentNullException("ent");
+            }
 
             foreach (var entity in ent)
+            {
                 Entities.Add(entity);
+            }
 
             _dbContext.SaveChanges();
         }
@@ -71,7 +79,6 @@ namespace TestApp.DAL
         {
             if (ent == null)
                 throw new ArgumentNullException("ent");
-
 
             var entry = _dbContext.Entry(ent);
             entry.State = EntityState.Modified;
@@ -84,7 +91,10 @@ namespace TestApp.DAL
                 throw new ArgumentNullException("ent");
 
             foreach (var entity in ent)
+            {
                 _dbContext.Entry(entity).State = EntityState.Modified;
+            }
+
             _dbContext.SaveChanges();
         }
 
@@ -92,11 +102,13 @@ namespace TestApp.DAL
         {
 
             if (ent == null)
+            {
                 throw new ArgumentNullException("ent");
+            }
 
 
             Entities.Remove(ent);
-           
+
             _dbContext.SaveChanges();
         }
 
@@ -106,11 +118,14 @@ namespace TestApp.DAL
                 throw new ArgumentNullException("ent");
 
             foreach (var entity in ent)
+            {
                 Entities.Remove(entity);
+            }
+
 
             _dbContext.SaveChanges();
         }
 
-     
+
     }
 }

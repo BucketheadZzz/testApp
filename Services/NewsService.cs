@@ -37,11 +37,11 @@ namespace TestApp.Services
 
             if (!String.IsNullOrEmpty(item.Tags))
             {
-                _newsTagService.SaveTagsMappingToNews(item.Tags, entity.Id);
+                _newsTagService.SaveTagsMapping(item.Tags, entity.Id);
             }
             if (item.Files.Count > 0 & item.Files[0] != null)
             {
-               _fileService.AddFileMappingToNews(item.Files,entity.Id);
+               _fileService.AddMapping(item.Files,entity.Id);
             }
         }
 
@@ -53,11 +53,11 @@ namespace TestApp.Services
 
             if (!String.IsNullOrEmpty(item.Tags))
             {
-                _newsTagService.SaveTagsMappingToNews(item.Tags, entity.Id);
+                _newsTagService.SaveTagsMapping(item.Tags, entity.Id);
             }
             if (item.Files.Count > 0 & item.Files[0] != null)
             {
-                _fileService.AddFileMappingToNews(item.Files, entity.Id);
+                _fileService.AddMapping(item.Files, entity.Id);
             }
         }
 
@@ -67,8 +67,8 @@ namespace TestApp.Services
             var removedItem = _newsContext.GetById(id);
             if (removedItem != null)
             {
-                _newsTagService.RemoveMappingByNewsId(id);
-                _fileService.RemoveMappingByNewsId(id);
+                _newsTagService.RemoveMapping(id);
+                _fileService.RemoveMapping(id);
                 _newsContext.Delete(removedItem);
             }
 
@@ -89,7 +89,7 @@ namespace TestApp.Services
 
         public IList<NewsModel> List()
         {
-            return _newsContext.Table.Select(x => x).ToListModel();
+            return _newsContext.Table.ToListModel();
         }
 
         public IList<NewsModel> GetNewsByTag(string tag)

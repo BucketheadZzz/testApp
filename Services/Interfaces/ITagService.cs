@@ -9,12 +9,11 @@ namespace TestApp.Services.Interfaces
  
         int Add(string tagName);
 
-        int GetTagIdByName(string tagName);
+        Tag GetTagByName(string tagName);
 
         void Delete(string tagName);
 
-        bool IsTagAlreadyExit(string tag);
-
+        bool AlreadyExist(string tag);
 
     }
 }
