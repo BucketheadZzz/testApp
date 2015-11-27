@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using TestApp.DAL;
 using TestApp.Models.Domain;
@@ -23,25 +24,29 @@ namespace TestApp.Services
 
         public File GetById(int id)
         {
-            return _fileContext.Table.SingleOrDefault(x => x.Id == id);
+            return _fileContext.GetById(id);
         }
 
-        public int Add(HttpPostedFileWrapper file)
+        public File Add(HttpPostedFileWrapper file)
         {
-
             var tempImage = new byte[file.ContentLength];
             file.InputStream.Read(tempImage, 0, file.ContentLength);
 
             var entity = new File { ContentType = file.ContentType, BinaryData = tempImage, FileName = file.FileName };
             var added = _fileContext.Insert(entity);
 
-            return added.Id;
-
+            return added;
         }
+
+        public IEnumerable<File> Add(IEnumerable<HttpPostedFileWrapper> files)
+        {
+            return files.Select(Add).ToList();
+        }
+
 
         public void Delete(int id)
         {
-            var deletedItem = _fileContext.Table.SingleOrDefault(x => x.Id == id);
+            var deletedItem = _fileContext.GetById(id);
             if (deletedItem != null)
             {
                 _fileContext.Delete(deletedItem);

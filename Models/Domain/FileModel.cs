@@ -26,11 +26,13 @@ namespace TestApp.Models.Domain
     }
 
     [Table("NewsFile_Mapping")]
-    public class NewsFileMapping : EntityTypeConfiguration<NewsFileMapping> 
+    public class NewsFileMapping : EntityTypeConfiguration<NewsFileMapping>
     {
+        
         public int Id { get; set; }
 
-        public int NewsId { get; set; }
+        [Column("NewsId")]
+        public int ObjectId { get; set; }
 
         public int FileId { get; set; }
 
@@ -38,5 +40,6 @@ namespace TestApp.Models.Domain
 
         public virtual News News { get; set; }
 
+       
     }
 }

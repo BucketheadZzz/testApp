@@ -60,19 +60,23 @@ namespace TestApp.DAL
             return ent;
         }
 
-        public void Insert(IEnumerable<T> ent)
+        public IEnumerable<T> Insert(IEnumerable<T> ent)
         {
             if (ent == null)
             {
                 throw new ArgumentNullException("ent");
             }
 
+            var resList = new List<T>();
             foreach (var entity in ent)
             {
                 Entities.Add(entity);
+                resList.Add(entity);
             }
 
             _dbContext.SaveChanges();
+
+            return resList;
         }
 
         public void Update(T ent)
@@ -105,7 +109,11 @@ namespace TestApp.DAL
             {
                 throw new ArgumentNullException("ent");
             }
-
+            if (_dbContext.Entry(ent).State != EntityState.Detached)
+            {
+                Entities.Attach(ent);
+            }
+          
 
             Entities.Remove(ent);
 

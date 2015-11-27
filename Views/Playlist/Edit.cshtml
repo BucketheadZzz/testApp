@@ -54,7 +54,7 @@
                                 }
                             </td>
                             <td>
-                                @Html.ActionLink("Delete", "DeleteFileFromPlaylist", "Playlist", new { newsId = Model.Id, fileId = item.File.Id }, new { @class = "btn btn-xs btn-danger" })
+                                @Html.ActionLink("Delete", "DeleteFileFromPlaylist", "Playlist", new {mappingId = item.Id, playlistId = Model.Id, fileId = item.File.Id }, new { @class = "btn btn-xs btn-danger" })
                             </td>
                         </tr>
                     }

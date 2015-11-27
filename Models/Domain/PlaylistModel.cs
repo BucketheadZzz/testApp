@@ -43,11 +43,10 @@ namespace TestApp.Models.Domain
 
 
     [Table("PlayListTag_Mapping")]
-    public class PlayListTagMapping : EntityTypeConfiguration<PlayListTagMapping>
+    public class PlayListTagMapping : EntityTypeConfiguration<PlayListTagMapping>, IBaseTagMappingEntity
     {
         public int Id { get; set; }
-
-        public int PlaylistId { get; set; }
+        public int ObjectId { get; set; }
 
         public int TagId { get; set; }
 

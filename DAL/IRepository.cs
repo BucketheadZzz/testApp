@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TestApp.Models.Domain;
 
 namespace TestApp.DAL
 {
@@ -12,7 +13,7 @@ namespace TestApp.DAL
 
         T Insert(T ent);
 
-        void Insert(IEnumerable<T> ent);
+        IEnumerable<T> Insert(IEnumerable<T> ent);
 
         void Update(T ent);
 
@@ -24,5 +25,6 @@ namespace TestApp.DAL
 
      
         IQueryable<T> Table { get; }
+ 
     }
 }

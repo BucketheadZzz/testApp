@@ -26,6 +26,8 @@ namespace TestApp.Models
 
         public IList<HttpPostedFileWrapper> Files { get; set; }
 
-        public ICollection<NewsFileMapping> NewsFilesMappings { get; set; } 
+        public ICollection<NewsFileMapping> NewsFilesMappings { get; set; }
+
+        public int NewsId { get; set; }
     }
 }

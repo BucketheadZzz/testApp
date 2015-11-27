@@ -6,6 +6,7 @@ using System.Data.Entity.ModelConfiguration;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using TestApp.Models.Domain;
 
 namespace TestApp.DAL
 {
@@ -42,6 +43,9 @@ namespace TestApp.DAL
                 dynamic configurationInstance = Activator.CreateInstance(type);
                 modelBuilder.Configurations.Add(configurationInstance);
             }
+            modelBuilder.Entity<NewsTagMapping>().Property(x => x.ObjectId).HasColumnName("NewsId");
+            modelBuilder.Entity<PlayListTagMapping>().Property(x => x.ObjectId).HasColumnName("PlaylistId");
+
             //...or do it manually below. For example,
             //modelBuilder.Configurations.Add(new LanguageMap());
 

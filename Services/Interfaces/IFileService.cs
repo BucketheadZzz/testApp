@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using TestApp.Models.Domain;
 
@@ -10,7 +11,9 @@ namespace TestApp.Services.Interfaces
         IQueryable<File> GetAll();
         File GetById(int id);
 
-        int Add(HttpPostedFileWrapper picture);
+        File Add(HttpPostedFileWrapper file);
+
+        IEnumerable<File> Add(IEnumerable<HttpPostedFileWrapper> files); 
 
         void Delete(int id);
 

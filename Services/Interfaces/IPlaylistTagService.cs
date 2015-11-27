@@ -7,9 +7,7 @@ namespace TestApp.Services.Interfaces
     {
         void SaveMapping(string tags, int playListId);
         void RemoveMapping(int playListId);
-       // void RemoveMapping(int playListId, int tagId);
         bool AlreadyMapped(int playListId, int tagId);
-
         IList<TagWidgetModel> GetPlaylistTagsList(); 
     }
 }

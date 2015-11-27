@@ -10,9 +10,9 @@ namespace TestApp.Controllers
     {
         private readonly IPlaylistService _playlistService;
         private readonly IUserService _userService;
-        private readonly IPlaylistFileService _playlistFileService;
+        private readonly IFileMappingService<PlayListFileMapping> _playlistFileService;
 
-        public PlaylistController(IPlaylistService playlistService, IUserService userService, IPlaylistFileService playlistFileService)
+        public PlaylistController(IPlaylistService playlistService, IUserService userService, IFileMappingService<PlayListFileMapping> playlistFileService)
         {
             _playlistService = playlistService;
             _userService = userService;
@@ -76,21 +76,12 @@ namespace TestApp.Controllers
             return RedirectToAction("ListAdmin","Playlist");
         }
 
-        public ActionResult DeleteFileFromPlaylist(int playlistId, int fileId)
+        public ActionResult DeleteFileFromPlaylist(int mappingId, int playlistId, int fileId)
         {
-            _playlistFileService.RemoveMapping(playlistId,fileId);
+            var removeMapped = new PlayListFileMapping() {FileId = fileId, PlaylistId = playlistId, Id = mappingId};
+            _playlistFileService.RemoveMapping(removeMapped);
 
             return RedirectToAction("Edit","Playlist", new {id = playlistId});
-        }
-
-        public ActionResult GetAudioFile(int fileId)
-        {
-            var file = _playlistFileService.GetFile(fileId);
-            if (file != null)
-            {
-                return File(file.BinaryData, file.ContentType, file.FileName);
-            }
-            return null;
         }
 
     }

@@ -11,7 +11,6 @@ namespace TestApp.Models.Domain
     [Table("News")]
     public class News : EntityTypeConfiguration<News> 
     {
-
         public News()
         {
             NewsTagMapping = new HashSet<NewsTagMapping>();

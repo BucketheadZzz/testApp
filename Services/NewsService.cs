@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
+using AutoMapper;
 using TestApp.DAL;
 using TestApp.Extensions;
 using TestApp.Models;
@@ -13,15 +16,20 @@ namespace TestApp.Services
     public class NewsService : INewsService
     {
         private readonly IRepository<News> _newsContext;
-        private readonly INewsTagService _newsTagService;
-        private readonly INewsFileService _fileService;
+        private readonly ITagMappingService<NewsTagMapping> _newsMappingService;
+        private readonly IFileMappingService<NewsFileMapping> _fileMappingService; 
+        private readonly IFileService _fileService;
+        private readonly ITagService _tagService;
 
-        public NewsService( INewsTagService newsTagService, INewsFileService fileService, IRepository<News> newsContext)
+        public NewsService( IRepository<News> newsContext, IFileMappingService<NewsFileMapping> fileMappingService, IFileService fileService, ITagService tagService, ITagMappingService<NewsTagMapping> newsMappingService)
         {
         
-            _newsTagService = newsTagService;
-            _fileService = fileService;
             _newsContext = newsContext;
+            _fileMappingService = fileMappingService;
+            _fileService = fileService;
+      
+            _tagService = tagService;
+            _newsMappingService = newsMappingService;
         }
 
         public IQueryable<News> GetAll()
@@ -37,11 +45,13 @@ namespace TestApp.Services
 
             if (!String.IsNullOrEmpty(item.Tags))
             {
-                _newsTagService.SaveTagsMapping(item.Tags, entity.Id);
+                var tagMapping = PrepareTagMappingCollection(_tagService.Add(item.Tags.Split(',')), entity.Id);
+                _newsMappingService.AddMapping(tagMapping);
             }
             if (item.Files.Count > 0 & item.Files[0] != null)
             {
-               _fileService.AddMapping(item.Files,entity.Id);
+                var fileMapping = PrepareFileMappingCollection(_fileService.Add(item.Files), entity.Id);
+              _fileMappingService.AddMapping(fileMapping);
             }
         }
 
@@ -53,11 +63,13 @@ namespace TestApp.Services
 
             if (!String.IsNullOrEmpty(item.Tags))
             {
-                _newsTagService.SaveTagsMapping(item.Tags, entity.Id);
+                var tagMapping = PrepareTagMappingCollection(_tagService.Add(item.Tags.Split(',')), entity.Id);
+                _newsMappingService.AddMapping(tagMapping);
             }
             if (item.Files.Count > 0 & item.Files[0] != null)
             {
-                _fileService.AddMapping(item.Files, entity.Id);
+                var mapping = PrepareFileMappingCollection(_fileService.Add(item.Files), entity.Id);
+                _fileMappingService.AddMapping(mapping);
             }
         }
 
@@ -67,8 +79,8 @@ namespace TestApp.Services
             var removedItem = _newsContext.GetById(id);
             if (removedItem != null)
             {
-                _newsTagService.RemoveMapping(id);
-                _fileService.RemoveMapping(id);
+                //_newsTagService.RemoveMapping(id);
+                //_fileService.Delete()
                 _newsContext.Delete(removedItem);
             }
 
@@ -80,7 +92,7 @@ namespace TestApp.Services
             if (enity != null)
             {
                 var model = enity.ToModel();
-                model.Tags = _newsTagService.GetTagsByNewsId(enity.Id);
+                model.Tags = String.Join(",", _newsMappingService.GetTagsByMapping(id).Select(x => x.Name));
 
                 return model;
             }
@@ -89,7 +101,17 @@ namespace TestApp.Services
 
         public IList<NewsModel> List()
         {
-            return _newsContext.Table.ToListModel();
+            var temp = _newsContext.Table.ToList();
+
+            return _newsContext.Table.Select(x => new NewsModel()
+            {
+                
+                Title = x.Title,
+                ShortDescrpition = x.ShortDescrpition,
+                Id = x.Id,
+                Created = x.Created
+
+            }).ToList();
         }
 
         public IList<NewsModel> GetNewsByTag(string tag)
@@ -99,5 +121,25 @@ namespace TestApp.Services
                     where news.NewsTagMapping.Count(x => x.Tag.Name == tag) > 0
                     select news).ToListModel();
         }
+
+        private ICollection<NewsTagMapping> PrepareTagMappingCollection(IEnumerable<Tag> tags, int newsId)
+        {
+            var resList = new Collection<NewsTagMapping>();
+            foreach (var tag in tags)
+            {
+                resList.Add(new NewsTagMapping(){ObjectId =  newsId, TagId = tag.Id});
+            }
+            return resList;
+        } 
+
+        private ICollection<NewsFileMapping> PrepareFileMappingCollection(IEnumerable<File> files, int playListId)
+        {
+            var resList = new Collection<NewsFileMapping>();
+            foreach (var file in files)
+            {
+                resList.Add(new NewsFileMapping() { FileId = file.Id, ObjectId = playListId });
+            }
+            return resList;
+        } 
     }
 }

@@ -33,6 +33,10 @@ namespace TestApp
             //  builder.RegisterType<Repository<News>>().As<IRepository<News>>().InstancePerLifetimeScope();
 
 
+            builder.RegisterGeneric(typeof(FileMappingService<>)).As(typeof(IFileMappingService<>)).InstancePerLifetimeScope();
+
+            builder.RegisterGeneric(typeof(TagMappingService<>)).As(typeof(ITagMappingService<>)).InstancePerLifetimeScope();
+
             var servicesAssembly = typeof(MvcApplication).Assembly;
 
             builder.RegisterAssemblyTypes(servicesAssembly)

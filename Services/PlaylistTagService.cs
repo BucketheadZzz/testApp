@@ -28,9 +28,9 @@ namespace TestApp.Services
             var splitedTags = tags.Split(',');
 
             var tagsToDelete = GetExistingTags(playlistId).Where(existTag => !splitedTags.Contains(existTag.Name)).
-                Select(tag => _listTagsMappingContext.Table.SingleOrDefault(x => x.PlaylistId == playlistId && x.TagId == tag.Id)).
+                Select(tag => _listTagsMappingContext.Table.SingleOrDefault(x => x.ObjectId == playlistId && x.TagId == tag.Id)).
                 Where(deletedMapping => deletedMapping != null).
-                ToList();;
+                ToList();
 
             if (tagsToDelete.Any())
             {
@@ -38,9 +38,9 @@ namespace TestApp.Services
             }
 
             var listMapping = (from tag in splitedTags 
-                               select _tagService.Add(tag) into addedId
-                               where !AlreadyMapped(addedId, playlistId) 
-                               select new PlayListTagMapping { PlaylistId = playlistId, TagId = addedId}).ToList();
+                               select _tagService.Add(tag) into added
+                               where !AlreadyMapped(added.Id, playlistId) 
+                               select new PlayListTagMapping { ObjectId = playlistId, TagId = added.Id}).ToList();
 
 
             _listTagsMappingContext.Insert(listMapping);
@@ -48,7 +48,7 @@ namespace TestApp.Services
 
         public void RemoveMapping(int playlistId)
         {
-            var removedList = _listTagsMappingContext.Table.Where(x => x.PlaylistId == playlistId);
+            var removedList = _listTagsMappingContext.Table.Where(x => x.ObjectId == playlistId);
             _listTagsMappingContext.Delete(removedList);
         }
 
@@ -64,7 +64,7 @@ namespace TestApp.Services
             return (from tag in _tagService.GetAll()
                     join tagMapping in _listTagsMappingContext.Table
                         on tag.Id equals tagMapping.TagId
-                    where tagMapping.PlaylistId == playlistId
+                    where tagMapping.ObjectId == playlistId
                     select tag).ToList();
         }
 
@@ -74,7 +74,7 @@ namespace TestApp.Services
             var tagList = (from tag in _tagService.GetAll()
                            join tagMapping in _listTagsMappingContext.Table
                                on tag.Id equals tagMapping.TagId
-                           where tagMapping.PlaylistId == playlistId
+                           where tagMapping.ObjectId == playlistId
                            select tag.Name).ToList();
 
             return tagList.Count > 0 ? string.Join(",", tagList) : String.Empty;
@@ -82,7 +82,7 @@ namespace TestApp.Services
 
         public bool AlreadyMapped(int tagId, int playlistId)
         {
-            return _listTagsMappingContext.Table.Any(x => x.PlaylistId == playlistId && x.TagId == tagId);
+            return _listTagsMappingContext.Table.Any(x => x.ObjectId == playlistId && x.TagId == tagId);
         }
 
         public IList<TagWidgetModel> GetPlaylistTagsList()

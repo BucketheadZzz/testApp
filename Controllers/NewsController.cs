@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
 using TestApp.Models;
+using TestApp.Models.Domain;
 using TestApp.Services.Interfaces;
 
 namespace TestApp.Controllers
@@ -9,14 +10,13 @@ namespace TestApp.Controllers
     {
         private readonly INewsService _newsService;
         private readonly IUserService _userService;
-        private readonly INewsTagService _newsTagService;
-        private readonly INewsFileService _newsFileService;
+        //private readonly INewsTagService _newsTagService;
+        private readonly IFileMappingService<NewsFileMapping> _fileMappingService;
 
-        public NewsController(IUserService userService, INewsService newsService, INewsTagService newsTagService, INewsFileService newsFileService)
+        public NewsController(IUserService userService, INewsService newsService, IFileMappingService<NewsFileMapping> fileMappingService)
         {
             _newsService = newsService;
-            _newsTagService = newsTagService;
-            _newsFileService = newsFileService;
+            _fileMappingService = fileMappingService;
             _userService = userService;
 
             ViewBag.IsAdmin = _userService.IsUserInRole("Admin");
@@ -78,18 +78,19 @@ namespace TestApp.Controllers
             return RedirectToAction("ListAdmin");
         }
 
-        public ActionResult DeleteFileFromNew(int newsId, int fileId)
+        public ActionResult DeleteFileFromNew(int mappingId, int newsId, int fileId)
         {
-            _newsFileService.RemoveMapping(newsId,fileId);
+            var removedMapping = new NewsFileMapping() { Id = mappingId, ObjectId = newsId, FileId = fileId };
+            _fileMappingService.RemoveMapping(removedMapping);
 
-            return RedirectToAction("Edit", new {id = newsId});
+            return RedirectToAction("Edit", new { id = newsId });
         }
 
 
-        public ActionResult NewsTagsWidget()
-        {
-            var model = _newsTagService.GetNewsTagsList();
-            return View(model);
-        }
+        //public ActionResult NewsTagsWidget()
+        //{
+        //   // var model = _newsTagService.GetNewsTagsList();
+        //    return View(model);
+        //}
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using TestApp.Models.Domain;
 
 namespace TestApp.Services.Interfaces
@@ -7,13 +8,12 @@ namespace TestApp.Services.Interfaces
     {
         IQueryable<Tag> GetAll();
  
-        int Add(string tagName);
+        Tag Add(string tagName);
 
-        Tag GetTagByName(string tagName);
+        IEnumerable<Tag> Add(IEnumerable<string> tags); 
 
         void Delete(string tagName);
 
-        bool AlreadyExist(string tag);
 
     }
 }

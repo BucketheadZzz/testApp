@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using TestApp.DAL;
 using TestApp.Models.Domain;
 using TestApp.Services.Interfaces;
@@ -20,24 +21,24 @@ namespace TestApp.Services
             return _tagsContext.Table;
         }
 
-        public int Add(string tagName)
+        public Tag Add(string tagName)
         {
-            if (AlreadyExist(tagName))
+            var existingTag = _tagsContext.Table.SingleOrDefault(x => x.Name == tagName);
+            if (existingTag != null)
             {
-                var existingTag = GetTagByName(tagName);
-                return existingTag != null ? existingTag.Id : -1;
+                return existingTag;
             }
+                
             var addedTag = _tagsContext.Insert(new Tag { Name = tagName });
        
-            return addedTag.Id;
+            return addedTag;
         }
 
-        public Tag GetTagByName(string tagName)
+        public IEnumerable<Tag> Add(IEnumerable<string> tags)
         {
-            return _tagsContext.Table.SingleOrDefault(x => x.Name == tagName);
+            return tags.Select(Add).ToList();
         }
 
-    
 
         public void Delete(string tagName)
         {
@@ -48,11 +49,7 @@ namespace TestApp.Services
         }
 
 
-
-        public bool AlreadyExist(string tag)
-        {
-            return _tagsContext.Table.Any(x => x.Name == tag);
-        }
+  
 
       
      
