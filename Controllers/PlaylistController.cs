@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
 using TestApp.Models;
+using TestApp.Models.Domain;
 using TestApp.Services.Interfaces;
 
 namespace TestApp.Controllers
@@ -82,6 +83,15 @@ namespace TestApp.Controllers
             return RedirectToAction("Edit","Playlist", new {id = playlistId});
         }
 
+        public ActionResult GetAudioFile(int fileId)
+        {
+            var file = _playlistFileService.GetFile(fileId);
+            if (file != null)
+            {
+                return File(file.BinaryData, file.ContentType, file.FileName);
+            }
+            return null;
+        }
 
     }
 }

@@ -1,0 +1,21 @@
+﻿@model IList<TestApp.Models.TagWidgetModel>
+@{
+    Layout = null;
+}
+
+<style>
+    .tags {
+        margin-right: 5px
+    }
+</style>
+
+@if (Model.Any())
+{
+    <div class="sidebar-module sidebar-module-inset">
+        <h1>Tags</h1>
+        @foreach (var item in Model)
+        {
+            <a href="/Playlist/List/?tag=@item.TagName" class="btn btn-xs btn-primary"><span class="tags" style="font-size: @((13 + (item.Count * 4 )))px">@item.TagName</span></a>
+        }
+    </div>
+}

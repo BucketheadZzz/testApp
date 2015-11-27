@@ -59,5 +59,10 @@ namespace TestApp.Services
                     Id = file.Id
                 }).ToList();
         }
+
+        public File GetFile(int fileId)
+        {
+            return _fileService.GetById(fileId);
+        }
     }
 }

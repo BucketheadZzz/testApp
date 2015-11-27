@@ -60,16 +60,6 @@ namespace TestApp.Services
         }
 
 
-        public IList<TagWidgetModel> GetNewsTagsList()
-        {
-            return (from tag in _tagService.GetAll()
-                join tagMap in _newsTagsMappingContext.Table
-                    on tag.Id equals tagMap.TagId
-                group tag by tag.Name into pg
-                let tagNumber = pg.Count()
-                select new TagWidgetModel {TagName = pg.Key, Count = tagNumber}).ToList();
-
-        }
 
 
         private IEnumerable<Tag> GetExistingNewsTags(int newsId)
@@ -98,6 +88,16 @@ namespace TestApp.Services
             return _newsTagsMappingContext.Table.Any(x => x.NewsId == newsId && x.TagId == tagId);
         }
 
-      
+
+        public IList<TagWidgetModel> GetNewsTagsList()
+        {
+            return (from tag in _tagService.GetAll()
+                    join tagMap in _newsTagsMappingContext.Table
+                        on tag.Id equals tagMap.TagId
+                    group tag by tag.Name into pg
+                    let tagNumber = pg.Count()
+                    select new TagWidgetModel { TagName = pg.Key, Count = tagNumber }).ToList();
+
+        }
     }
 }

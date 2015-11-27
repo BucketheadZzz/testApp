@@ -12,5 +12,6 @@ namespace TestApp.Services.Interfaces
 
         IList<File> GetFilesByPlayListId(int playlistId);
 
+        File GetFile(int fileId);
     }
 }

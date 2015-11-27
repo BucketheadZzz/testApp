@@ -34,7 +34,7 @@ namespace TestApp.Services
             }
             if (playlist.Files.Count > 0 & playlist.Files[0] != null)
             {
-                //_playlistFileService.AddFileMappingToNews(playlist.Files, added.Id);
+                _playlistFileService.AddMapping(playlist.Files, added.Id);
             }
             return added.Id;
         }
@@ -51,7 +51,7 @@ namespace TestApp.Services
             }
             if (playlist.Files.Count > 0 & playlist.Files[0] != null)
             {
-                //_fileService.AddFileMappingToNews(playlist.Files, entity.Id);
+                _playlistFileService.AddMapping(playlist.Files, playlist.Id);
             }
         }
 

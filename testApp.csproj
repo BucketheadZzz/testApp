@@ -235,6 +235,10 @@
     <Content Include="Content\bootstrap\js\bootstrap.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\html5player\css\styles.css" />
+    <Content Include="Content\html5player\images\spr.png" />
+    <Content Include="Content\html5player\js\jquery-ui-1.9.2.custom.min.js" />
+    <Content Include="Content\html5player\js\main.js" />
     <Content Include="Content\jplayer\css\jplayer.blue.monday.css" />
     <Content Include="Content\jplayer\image\jplayer.blue.monday.jpg" />
     <Content Include="Content\jplayer\image\jplayer.blue.monday.seeking.gif" />
@@ -299,6 +303,8 @@
     <Content Include="Views\Playlist\List.cshtml" />
     <Content Include="Views\Playlist\ListAdmin.cshtml" />
     <Content Include="Views\Playlist\Edit.cshtml" />
+    <Content Include="Views\Playlist\_Player.cshtml" />
+    <Content Include="Views\Playlist\PlaylistsTagsWidget.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

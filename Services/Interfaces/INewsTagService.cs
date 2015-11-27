@@ -11,11 +11,12 @@ namespace TestApp.Services.Interfaces
 
         void RemoveMappingByTagId(int tagId);
 
-        IList<TagWidgetModel> GetNewsTagsList(); 
-
         string GetTagsByNewsId(int newsId);
 
         bool AlreadyMapped(int tagId, int newsId);
+
+
+        IList<TagWidgetModel> GetNewsTagsList(); 
 
       
     }

@@ -85,7 +85,14 @@ namespace TestApp.Services
             return _listTagsMappingContext.Table.Any(x => x.PlaylistId == playlistId && x.TagId == tagId);
         }
 
-       
-
+        public IList<TagWidgetModel> GetPlaylistTagsList()
+        {
+            return (from tag in _tagService.GetAll()
+                    join tagMap in _listTagsMappingContext.Table
+                        on tag.Id equals tagMap.TagId
+                    group tag by tag.Name into pg
+                    let tagNumber = pg.Count()
+                    select new TagWidgetModel { TagName = pg.Key, Count = tagNumber }).ToList();
+        }
     }
 }
