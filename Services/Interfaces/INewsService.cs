@@ -8,7 +8,7 @@ namespace TestApp.Services.Interfaces
     public interface INewsService
     {
 
-        IQueryable<News> GetAll();
+  
  
         void Add(NewsModel item);
 
@@ -18,8 +18,10 @@ namespace TestApp.Services.Interfaces
 
         NewsModel GetById(int id);
 
-        IList<NewsModel> List();
+        IQueryable<News> GetAll();
 
-        IList<NewsModel> GetNewsByTag(string tag);
+        IList<NewsModel> GetModels();
+
+        IList<NewsModel> GetModelsByTag(string tag);
     }
 }

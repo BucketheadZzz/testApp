@@ -29,11 +29,14 @@ namespace TestApp.Models.Domain
     }
 
     [Table("PlayListFile_Mapping")]
-    public class PlayListFileMapping : EntityTypeConfiguration<PlayListFileMapping>
+    public class PlayListFileMapping : EntityTypeConfiguration<PlayListFileMapping>, IBaseFileMappingEntity
     {
         public int Id { get; set; }
 
-        public int PlaylistId { get; set; }
+
+        [Column("PlayList_Id")]
+        [ForeignKey("Playlist")]
+        public int ObjectId { get; set; }
 
         public int FileId { get; set; }
 
@@ -46,6 +49,9 @@ namespace TestApp.Models.Domain
     public class PlayListTagMapping : EntityTypeConfiguration<PlayListTagMapping>, IBaseTagMappingEntity
     {
         public int Id { get; set; }
+
+        [Column("PlayList_Id")]
+        [ForeignKey("Playlist")]
         public int ObjectId { get; set; }
 
         public int TagId { get; set; }

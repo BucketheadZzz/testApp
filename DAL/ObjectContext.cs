@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Web;
-using TestApp.Models.Domain;
 
 namespace TestApp.DAL
 {
@@ -17,6 +15,7 @@ namespace TestApp.DAL
             : base("DefaultConnection")
         {
             Database.SetInitializer<ObjectContext>(null);
+            this.Database.Log += s => Trace.WriteLine(s);
         }
 
 
@@ -43,8 +42,8 @@ namespace TestApp.DAL
                 dynamic configurationInstance = Activator.CreateInstance(type);
                 modelBuilder.Configurations.Add(configurationInstance);
             }
-            modelBuilder.Entity<NewsTagMapping>().Property(x => x.ObjectId).HasColumnName("NewsId");
-            modelBuilder.Entity<PlayListTagMapping>().Property(x => x.ObjectId).HasColumnName("PlaylistId");
+
+          //  modelBuilder.Entity<NewsFileMapping>().Property(x => x).HasColumnName("News_Id");
 
             //...or do it manually below. For example,
             //modelBuilder.Configurations.Add(new LanguageMap());

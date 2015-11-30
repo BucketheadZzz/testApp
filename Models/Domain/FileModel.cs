@@ -13,6 +13,8 @@ namespace TestApp.Models.Domain
         public File()
         {
             NewsFilesMappings = new HashSet<NewsFileMapping>();
+
+            PlayListFileMappings = new HashSet<PlayListFileMapping>();
         }
         public int Id { get; set; }
 
@@ -22,24 +24,10 @@ namespace TestApp.Models.Domain
 
         public string FileName { get; set; }
 
-        public virtual ICollection<NewsFileMapping> NewsFilesMappings { get; set; } 
+        public virtual ICollection<NewsFileMapping> NewsFilesMappings { get; set; }
+
+        public virtual ICollection<PlayListFileMapping> PlayListFileMappings { get; set; } 
     }
 
-    [Table("NewsFile_Mapping")]
-    public class NewsFileMapping : EntityTypeConfiguration<NewsFileMapping>
-    {
-        
-        public int Id { get; set; }
-
-        [Column("NewsId")]
-        public int ObjectId { get; set; }
-
-        public int FileId { get; set; }
-
-        public virtual File File { get; set; }
-
-        public virtual News News { get; set; }
-
-       
-    }
+   
 }

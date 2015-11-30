@@ -5,7 +5,7 @@ using TestApp.Models.Domain;
 
 namespace TestApp.Services.Interfaces
 {
-    public interface IFileService
+    public interface IFileService<T>
     {
 
         IQueryable<File> GetAll();
@@ -18,5 +18,9 @@ namespace TestApp.Services.Interfaces
         void Delete(int id);
 
         void Delete(int[] ids);
+
+
+        void AddMapping(IEnumerable<T> listMapping);
+        void RemoveMapping(T entity);
     }
 }

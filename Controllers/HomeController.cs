@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Web.Mvc;
-using TestApp.DAL;
-using TestApp.Models.Domain;
+﻿using System.Web.Mvc;
 using TestApp.Services.Interfaces;
 
 namespace TestApp.Controllers

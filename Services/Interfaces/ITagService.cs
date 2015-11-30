@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TestApp.Models;
 using TestApp.Models.Domain;
 
 namespace TestApp.Services.Interfaces
 {
-    public interface ITagService
+    public interface ITagService<T>
     {
         IQueryable<Tag> GetAll();
  
@@ -14,6 +15,17 @@ namespace TestApp.Services.Interfaces
 
         void Delete(string tagName);
 
+
+        void AddMapping(IEnumerable<T> tags);
+
+        void RemoveMapping(int newsId);
+
+
+        IList<Tag> GetTagsByMapping(int objId);
+
+        bool AlreadyMapped(int tagId, int objId);
+
+        IList<TagWidgetModel> TagsWidget();
 
     }
 }

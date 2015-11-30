@@ -10,13 +10,15 @@ namespace TestApp.Controllers
     {
         private readonly IPlaylistService _playlistService;
         private readonly IUserService _userService;
-        private readonly IFileMappingService<PlayListFileMapping> _playlistFileService;
+        private readonly IFileService<PlayListFileMapping> _playlistFileService;
+        private readonly ITagService<PlayListTagMapping> _tagService; 
 
-        public PlaylistController(IPlaylistService playlistService, IUserService userService, IFileMappingService<PlayListFileMapping> playlistFileService)
+        public PlaylistController(IPlaylistService playlistService, IUserService userService, IFileService<PlayListFileMapping> playlistFileService, ITagService<PlayListTagMapping> tagService)
         {
             _playlistService = playlistService;
             _userService = userService;
             _playlistFileService = playlistFileService;
+            _tagService = tagService;
 
 
             ViewBag.IsAdmin = _userService.IsUserInRole("Admin");
@@ -25,14 +27,14 @@ namespace TestApp.Controllers
 
         public ActionResult List(string tag)
         {
-            var model = String.IsNullOrEmpty(tag) ? _playlistService.GetPlaylistModels() : new object();
+            var model = String.IsNullOrEmpty(tag) ? _playlistService.GetModels() : _playlistService.GetModelsByTag(tag);
 
             return View(model);
         }
 
         public ActionResult ListAdmin()
         {
-            var model = _playlistService.GetPlaylistModels();
+            var model = _playlistService.GetModels();
 
             return View(model);
         }
@@ -78,11 +80,26 @@ namespace TestApp.Controllers
 
         public ActionResult DeleteFileFromPlaylist(int mappingId, int playlistId, int fileId)
         {
-            var removeMapped = new PlayListFileMapping() {FileId = fileId, PlaylistId = playlistId, Id = mappingId};
+            var removeMapped = new PlayListFileMapping() {FileId = fileId, ObjectId = playlistId, Id = mappingId};
             _playlistFileService.RemoveMapping(removeMapped);
 
             return RedirectToAction("Edit","Playlist", new {id = playlistId});
         }
 
+
+        public ActionResult PlaylistsTagsWidget()
+        {
+            var model = _tagService.TagsWidget();
+            return View(model);
+        }
+        public ActionResult GetAudioFile(int fileId)
+        {
+            var file = _playlistFileService.GetById(fileId);
+            if (file != null)
+            {
+                return File(file.BinaryData, file.ContentType, file.FileName);
+            }
+            return null;
+        }
     }
 }

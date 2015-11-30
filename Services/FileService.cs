@@ -7,13 +7,15 @@ using TestApp.Services.Interfaces;
 
 namespace TestApp.Services
 {
-    public class FileService : IFileService
+    public class FileService<T> : IFileService<T> where T: class
     {
         private readonly IRepository<File> _fileContext;
+        private readonly IRepository<T> _repositoryFileMapping;
 
-        public FileService(IRepository<File> fileContext)
+        public FileService(IRepository<File> fileContext, IRepository<T> repositoryFileMapping)
         {
             _fileContext = fileContext;
+            _repositoryFileMapping = repositoryFileMapping;
         }
 
 
@@ -60,6 +62,18 @@ namespace TestApp.Services
             {
                 Delete(id);
             }
+        }
+
+
+        public void AddMapping(IEnumerable<T> listMapping)
+        {
+            _repositoryFileMapping.Insert(listMapping);
+        }
+
+        public void RemoveMapping(T entity)
+        {
+            _repositoryFileMapping.Delete(entity);
+
         }
     }
 }

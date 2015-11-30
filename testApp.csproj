@@ -184,8 +184,14 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201511300925248_migration.cs" />
+    <Compile Include="Migrations\201511300925248_migration.Designer.cs">
+      <DependentUpon>201511300925248_migration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountModels.cs" />
-    <Compile Include="Models\Domain\BaseMappingEntity.cs" />
+    <Compile Include="Models\Domain\BaseFileMappingEntity.cs" />
+    <Compile Include="Models\Domain\BaseTagMappingEntity.cs" />
     <Compile Include="Models\Domain\NewsModel.cs" />
     <Compile Include="Models\Domain\TagModel.cs" />
     <Compile Include="Models\Domain\FileModel.cs" />
@@ -196,14 +202,10 @@
     <Compile Include="Models\TagWidgetModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Interfaces\INewsService.cs" />
-    <Compile Include="Services\Interfaces\ITagMappingService.cs" />
     <Compile Include="Services\Interfaces\IFileService.cs" />
-    <Compile Include="Services\Interfaces\IFileMappingService.cs" />
     <Compile Include="Services\Interfaces\IPlaylistService.cs" />
     <Compile Include="Services\Interfaces\ITagService.cs" />
-    <Compile Include="Services\FileMappingService.cs" />
     <Compile Include="Services\NewsService.cs" />
-    <Compile Include="Services\TagMappingService.cs" />
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\PlaylistService.cs" />
     <Compile Include="Services\TagService.cs" />
@@ -312,6 +314,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201511300925248_migration.resx">
+      <DependentUpon>201511300925248_migration.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

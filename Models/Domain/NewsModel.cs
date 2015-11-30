@@ -34,4 +34,46 @@ namespace TestApp.Models.Domain
         public virtual ICollection<NewsFileMapping> NewsFileMappings { get; set; } 
        
     }
+
+    [Table("NewsTag_Mapping")]
+    public class NewsTagMapping : EntityTypeConfiguration<NewsTagMapping>, IBaseTagMappingEntity
+    {
+
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Column("News_Id")]
+        [ForeignKey("News")]
+        public int ObjectId { get; set; }
+
+        public int TagId { get; set; }
+
+        public virtual News News { get; set; }
+        public virtual Tag Tag { get; set; }
+
+
+    }
+
+
+    [Table("NewsFile_Mapping")]
+    public class NewsFileMapping : EntityTypeConfiguration<NewsFileMapping>, IBaseFileMappingEntity
+    {
+
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Column("News_Id")]
+        [ForeignKey("News")]
+        public int ObjectId { get; set; }
+
+        public int FileId { get; set; }
+
+        public virtual File File { get; set; }
+
+        public virtual News News { get; set; }
+
+
+    }
 }

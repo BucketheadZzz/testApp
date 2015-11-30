@@ -12,6 +12,8 @@ namespace TestApp.Models.Domain
         public Tag()
         {
             NewsTagMapping = new HashSet<NewsTagMapping>();
+
+            PlayListTagMapping = new HashSet<PlayListTagMapping>();
         }
 
         [Key]
@@ -21,22 +23,8 @@ namespace TestApp.Models.Domain
         public string Name { get; set; }
 
         public virtual ICollection<NewsTagMapping> NewsTagMapping { get; set; }
+        public virtual ICollection<PlayListTagMapping> PlayListTagMapping { get; set; }
     }
 
-    [Table("NewsTag_Mapping")]
-    public class NewsTagMapping : EntityTypeConfiguration<NewsTagMapping> , IBaseTagMappingEntity
-    {
-    
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        public int ObjectId { get; set; }
-
-        public int TagId { get; set; }
-
-        public virtual News News { get; set; }
-        public virtual Tag Tag { get; set; }
-
-       
-    }
+   
 }

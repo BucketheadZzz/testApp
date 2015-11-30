@@ -10,13 +10,14 @@ namespace TestApp.Controllers
     {
         private readonly INewsService _newsService;
         private readonly IUserService _userService;
-        //private readonly INewsTagService _newsTagService;
-        private readonly IFileMappingService<NewsFileMapping> _fileMappingService;
+        private readonly IFileService<NewsFileMapping> _fileMappingService;
+        private readonly ITagService<NewsTagMapping> _tagService; 
 
-        public NewsController(IUserService userService, INewsService newsService, IFileMappingService<NewsFileMapping> fileMappingService)
+        public NewsController(IUserService userService, INewsService newsService, IFileService<NewsFileMapping> fileMappingService, ITagService<NewsTagMapping> tagService)
         {
             _newsService = newsService;
             _fileMappingService = fileMappingService;
+            _tagService = tagService;
             _userService = userService;
 
             ViewBag.IsAdmin = _userService.IsUserInRole("Admin");
@@ -26,14 +27,14 @@ namespace TestApp.Controllers
 
         public ActionResult List(string tag)
         {
-            var model = String.IsNullOrEmpty(tag) ? _newsService.List() : _newsService.GetNewsByTag(tag);
+            var model = String.IsNullOrEmpty(tag) ? _newsService.GetModels() : _newsService.GetModelsByTag(tag);
 
             return View(model);
         }
 
         public ActionResult ListAdmin()
         {
-            var model = _newsService.List();
+            var model = _newsService.GetModels();
 
             return View(model);
         }
@@ -87,10 +88,10 @@ namespace TestApp.Controllers
         }
 
 
-        //public ActionResult NewsTagsWidget()
-        //{
-        //   // var model = _newsTagService.GetNewsTagsList();
-        //    return View(model);
-        //}
+        public ActionResult NewsTagsWidget()
+        {
+            var model = _tagService.TagsWidget();
+            return View(model);
+        }
     }
 }

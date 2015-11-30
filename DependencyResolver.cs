@@ -30,12 +30,10 @@ namespace TestApp
             // Register our Data dependencies
             builder.Register<IDbContext>(c => new ObjectContext()).InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
-            //  builder.RegisterType<Repository<News>>().As<IRepository<News>>().InstancePerLifetimeScope();
 
+            builder.RegisterGeneric(typeof(FileService<>)).As(typeof(IFileService<>)).InstancePerLifetimeScope();
 
-            builder.RegisterGeneric(typeof(FileMappingService<>)).As(typeof(IFileMappingService<>)).InstancePerLifetimeScope();
-
-            builder.RegisterGeneric(typeof(TagMappingService<>)).As(typeof(ITagMappingService<>)).InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(TagService<>)).As(typeof(ITagService<>)).InstancePerLifetimeScope();
 
             var servicesAssembly = typeof(MvcApplication).Assembly;
 
@@ -44,14 +42,6 @@ namespace TestApp
                    .As(t => t.GetInterfaces()
                    .Where(i => i.Name.EndsWith("Service")))
                    .InstancePerDependency();
-
-
-            //builder.RegisterType<UserService>().As<IUserService>().InstancePerLifetimeScope();
-            //builder.RegisterType<FileService>().As<IFileService>().InstancePerLifetimeScope();
-            //builder.RegisterType<TagService>().As<ITagService>().InstancePerLifetimeScope();
-            //builder.RegisterType<NewsService>().As<INewsService>().InstancePerLifetimeScope();
-            //builder.RegisterType<NewsFileService>().As<INewsFileService>().InstancePerLifetimeScope();
-            //builder.RegisterType<NewsTagService>().As<INewsTagService>().InstancePerLifetimeScope();
 
             var container = builder.Build();
 

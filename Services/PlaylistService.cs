@@ -13,20 +13,16 @@ namespace TestApp.Services
     public class PlaylistService: IPlaylistService
     {
         private readonly IRepository<Playlist> _playListRepository;
-        private readonly IFileMappingService<PlayListFileMapping> _playlistFileMappingService;
-        private readonly ITagMappingService<PlayListTagMapping> _playlistTagService;
-        private readonly IFileService _fileService;
-        private readonly ITagService _tagService;
+        private readonly IFileService<PlayListFileMapping> _fileService;
+        private readonly ITagService<PlayListTagMapping> _tagService;
 
-        public PlaylistService(IRepository<Playlist> playListRepository,  IFileMappingService<PlayListFileMapping> playlistFileMappingService, IFileService fileService, IFileMappingService<PlayListFileMapping> playlistFileMappingService1, ITagMappingService<PlayListTagMapping> playlistTagService, ITagService tagService)
+        public PlaylistService(IRepository<Playlist> playListRepository, IFileService<PlayListFileMapping> fileService, ITagService<PlayListTagMapping> tagService)
         {
             _playListRepository = playListRepository;
-     
             _fileService = fileService;
-            _playlistFileMappingService = playlistFileMappingService1;
-            _playlistTagService = playlistTagService;
             _tagService = tagService;
         }
+
 
         public int Add(PlaylistModel playlist)
         {
@@ -37,12 +33,12 @@ namespace TestApp.Services
             if (!String.IsNullOrEmpty(playlist.Tags))
             {
                 var tagMapping = PrepareTagMappingCollection(_tagService.Add(playlist.Tags.Split(',')), added.Id);
-                _playlistTagService.AddMapping(tagMapping);
+                _tagService.AddMapping(tagMapping);
             }
             if (playlist.Files.Count > 0 & playlist.Files[0] != null)
             {
                var mapping = PrepareMappingCollection(_fileService.Add(playlist.Files),added.Id);
-               _playlistFileMappingService.AddMapping(mapping);
+               _fileService.AddMapping(mapping);
             }
             return added.Id;
         }
@@ -56,12 +52,12 @@ namespace TestApp.Services
             if (!String.IsNullOrEmpty(playlist.Tags))
             {
                 var tagMapping = PrepareTagMappingCollection(_tagService.Add(playlist.Tags.Split(',')), playlist.Id);
-                _playlistTagService.AddMapping(tagMapping);
+                _tagService.AddMapping(tagMapping);
             }
             if (playlist.Files.Count > 0 & playlist.Files[0] != null)
             {
                 var mapping = PrepareMappingCollection(_fileService.Add(playlist.Files), playlist.Id);
-                _playlistFileMappingService.AddMapping(mapping);
+                _fileService.AddMapping(mapping);
             }
         }
 
@@ -70,20 +66,19 @@ namespace TestApp.Services
             var deletedItem = _playListRepository.Table.SingleOrDefault(x => x.Id == id);
             if (deletedItem != null)
             {
-                _playlistTagService.RemoveMapping(id);
+                _tagService.RemoveMapping(id);
+                _fileService.Delete(id);
                 _playListRepository.Delete(deletedItem);
             }
         }
 
         public PlaylistModel GetById(int id)
         {
-
             var enity = _playListRepository.GetById(id);
             if (enity != null)
             {
                 var model = enity.ToModel();
-                model.Tags = String.Join(",", _playlistTagService.GetTagsByMapping(id).Select(x => x.Name));
-
+                model.Tags = String.Join(",", _tagService.GetTagsByMapping(id).Select(x => x.Name));
                 return model;
             }
             return new PlaylistModel();
@@ -94,7 +89,15 @@ namespace TestApp.Services
             return _playListRepository.Table;
         }
 
-        public IList<PlaylistModel> GetPlaylistModels()
+        public IList<PlaylistModel> GetModelsByTag(string tag)
+        {
+            return
+            (from playList in _playListRepository.Table
+             where playList.PlayListTagMapping.Count(x => x.Tag.Name == tag) > 0
+             select playList).ToListModel();
+        }
+
+        public IList<PlaylistModel> GetModels()
         {
             return _playListRepository.Table.ToListModel();
         }
@@ -115,7 +118,7 @@ namespace TestApp.Services
             var resList = new Collection<PlayListFileMapping>();
             foreach (var file in files)
             {
-                resList.Add(new PlayListFileMapping(){FileId =  file.Id, PlaylistId = playListId});
+                resList.Add(new PlayListFileMapping(){FileId =  file.Id, ObjectId = playListId});
             }
             return resList;
         } 

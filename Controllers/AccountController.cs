@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using Microsoft.Web.WebPages.OAuth;
 using TestApp.Filters;
+using TestApp.Models;
 using TestApp.Models.Domain;
 using TestApp.Services.Interfaces;
 using WebMatrix.WebData;
