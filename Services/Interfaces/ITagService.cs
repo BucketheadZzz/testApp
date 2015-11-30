@@ -7,19 +7,15 @@ namespace TestApp.Services.Interfaces
 {
     public interface ITagService<T>
     {
-        IQueryable<Tag> GetAll();
- 
         Tag Add(string tagName);
 
         IEnumerable<Tag> Add(IEnumerable<string> tags); 
 
         void Delete(string tagName);
 
-
         void AddMapping(IEnumerable<T> tags);
 
         void RemoveMapping(int newsId);
-
 
         IList<Tag> GetTagsByMapping(int objId);
 

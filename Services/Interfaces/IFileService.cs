@@ -8,7 +8,6 @@ namespace TestApp.Services.Interfaces
     public interface IFileService<T>
     {
 
-        IQueryable<File> GetAll();
         File GetById(int id);
 
         File Add(HttpPostedFileWrapper file);
@@ -19,8 +18,8 @@ namespace TestApp.Services.Interfaces
 
         void Delete(int[] ids);
 
-
         void AddMapping(IEnumerable<T> listMapping);
+
         void RemoveMapping(T entity);
     }
 }

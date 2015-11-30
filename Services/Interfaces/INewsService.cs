@@ -7,9 +7,6 @@ namespace TestApp.Services.Interfaces
 {
     public interface INewsService
     {
-
-  
- 
         void Add(NewsModel item);
 
         void Update(NewsModel item);
@@ -17,8 +14,6 @@ namespace TestApp.Services.Interfaces
         void Delete(int id);
 
         NewsModel GetById(int id);
-
-        IQueryable<News> GetAll();
 
         IList<NewsModel> GetModels();
 

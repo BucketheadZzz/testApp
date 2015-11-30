@@ -10,7 +10,7 @@ using TestApp.Services.Interfaces;
 
 namespace TestApp.Services
 {
-    public class PlaylistService: IPlaylistService
+    public class PlaylistService : IPlaylistService
     {
         private readonly IRepository<Playlist> _playListRepository;
         private readonly IFileService<PlayListFileMapping> _fileService;
@@ -23,21 +23,19 @@ namespace TestApp.Services
             _tagService = tagService;
         }
 
-
         public int Add(PlaylistModel playlist)
         {
-
             var item = playlist.ToEntity();
             var added = _playListRepository.Insert(item);
 
-            if (!String.IsNullOrEmpty(playlist.Tags))
+            if (!string.IsNullOrEmpty(playlist.Tags))
             {
                 var tagMapping = PrepareTagMappingCollection(_tagService.Add(playlist.Tags.Split(',')), added.Id);
                 _tagService.AddMapping(tagMapping);
             }
             if (playlist.Files.Count > 0 & playlist.Files[0] != null)
             {
-               var mapping = PrepareMappingCollection(_fileService.Add(playlist.Files),added.Id);
+               var mapping = PrepareMappingCollection(_fileService.Add(playlist.Files), added.Id);
                _fileService.AddMapping(mapping);
             }
             return added.Id;
@@ -49,7 +47,7 @@ namespace TestApp.Services
 
             _playListRepository.Update(entity);
 
-            if (!String.IsNullOrEmpty(playlist.Tags))
+            if (!string.IsNullOrEmpty(playlist.Tags))
             {
                 var tagMapping = PrepareTagMappingCollection(_tagService.Add(playlist.Tags.Split(',')), playlist.Id);
                 _tagService.AddMapping(tagMapping);
@@ -78,15 +76,10 @@ namespace TestApp.Services
             if (enity != null)
             {
                 var model = enity.ToModel();
-                model.Tags = String.Join(",", _tagService.GetTagsByMapping(id).Select(x => x.Name));
+                model.Tags = string.Join(",", _tagService.GetTagsByMapping(id).Select(x => x.Name));
                 return model;
             }
             return new PlaylistModel();
-        }
-
-        public IQueryable<Playlist> GetAll()
-        {
-            return _playListRepository.Table;
         }
 
         public IList<PlaylistModel> GetModelsByTag(string tag)
@@ -101,7 +94,6 @@ namespace TestApp.Services
         {
             return _playListRepository.Table.ToListModel();
         }
-
 
         private ICollection<PlayListTagMapping> PrepareTagMappingCollection(IEnumerable<Tag> tags, int newsId)
         {
@@ -118,7 +110,7 @@ namespace TestApp.Services
             var resList = new Collection<PlayListFileMapping>();
             foreach (var file in files)
             {
-                resList.Add(new PlayListFileMapping(){FileId =  file.Id, ObjectId = playListId});
+                resList.Add(new PlayListFileMapping { FileId = file.Id, ObjectId = playListId });
             }
             return resList;
         } 

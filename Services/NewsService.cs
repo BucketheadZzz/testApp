@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.Entity;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using AutoMapper;
 using TestApp.DAL;
 using TestApp.Extensions;
 using TestApp.Models;
@@ -27,20 +23,13 @@ namespace TestApp.Services
    
         }
 
-
-        public IQueryable<News> GetAll()
-        {
-            return _newsContext.Table;
-        }
-
-
         public void Add(NewsModel item)
         {
             var entity = item.ToEntity();
 
             _newsContext.Insert(entity);
 
-            if (!String.IsNullOrEmpty(item.Tags))
+            if (!string.IsNullOrEmpty(item.Tags))
             {
                 var tagMapping = PrepareTagMappingCollection(_tagService.Add(item.Tags.Split(',')), entity.Id);
                 _tagService.AddMapping(tagMapping);
@@ -58,7 +47,7 @@ namespace TestApp.Services
 
             _newsContext.Update(entity);
 
-            if (!String.IsNullOrEmpty(item.Tags))
+            if (!string.IsNullOrEmpty(item.Tags))
             {
                 var tagMapping = PrepareTagMappingCollection(_tagService.Add(item.Tags.Split(',')), entity.Id);
                 _tagService.AddMapping(tagMapping);
@@ -69,7 +58,6 @@ namespace TestApp.Services
                 _fileService.AddMapping(mapping);
             }
         }
-
 
         public void Delete(int id)
         {
@@ -89,7 +77,7 @@ namespace TestApp.Services
             if (enity != null)
             {
                 var model = enity.ToModel();
-                model.Tags = String.Join(",", _tagService.GetTagsByMapping(id).Select(x => x.Name));
+                model.Tags = string.Join(",", _tagService.GetTagsByMapping(id).Select(x => x.Name));
 
                 return model;
             }
@@ -98,7 +86,6 @@ namespace TestApp.Services
 
         public IList<NewsModel> GetModels()
         {
-
             return _newsContext.Table.ToListModel();
         }
 
@@ -115,7 +102,7 @@ namespace TestApp.Services
             var resList = new Collection<NewsTagMapping>();
             foreach (var tag in tags)
             {
-                resList.Add(new NewsTagMapping(){ObjectId =  newsId, TagId = tag.Id});
+                resList.Add(new NewsTagMapping { ObjectId = newsId, TagId = tag.Id });
             }
             return resList;
         } 

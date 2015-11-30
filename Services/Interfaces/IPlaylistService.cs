@@ -15,8 +15,6 @@ namespace TestApp.Services.Interfaces
 
         PlaylistModel GetById(int id);
 
-        IQueryable<Playlist> GetAll();
-
         IList<PlaylistModel> GetModelsByTag(string tag);
 
         IList<PlaylistModel> GetModels();

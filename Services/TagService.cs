@@ -21,11 +21,6 @@ namespace TestApp.Services
         }
 
 
-        public IQueryable<Tag> GetAll()
-        {
-            return _tagsContext.Table;
-        }
-
         public Tag Add(string tagName)
         {
             var existingTag = _tagsContext.Table.SingleOrDefault(x => x.Name == tagName);
@@ -54,15 +49,12 @@ namespace TestApp.Services
         }
 
 
-
-
         public void AddMapping(IEnumerable<T> tags)
         {
-
             var objId = tags.First().ObjectId;
             var addedIds = tags.Select(x => x.TagId).ToList();
 
-            var tagsToDelete = (from mapping in _tagsMappingContext.Table join allTags in GetAll() on mapping.TagId equals allTags.Id
+            var tagsToDelete = (from mapping in _tagsMappingContext.Table join allTags in _tagsContext.Table on mapping.TagId equals allTags.Id
                 join existTag in GetExistingObjTags(objId).Where(x => !addedIds.Contains(x.Id))
                     on allTags.Id equals existTag.Id
                 select mapping);
@@ -84,17 +76,14 @@ namespace TestApp.Services
             _tagsMappingContext.Delete(removedList);
         }
 
-
-
         private IQueryable<Tag> GetExistingObjTags(int objId)
         {
-            return from tag in GetAll()
+            return from tag in _tagsContext.Table
                    join tagMapping in _tagsMappingContext.Table
                        on tag.Id equals tagMapping.TagId
                    where tagMapping.ObjectId == objId
                    select tag;
         }
-
 
         public IList<Tag> GetTagsByMapping(int objId)
         {
@@ -106,17 +95,14 @@ namespace TestApp.Services
             return _tagsMappingContext.Table.Any(x => x.ObjectId == objId && x.TagId == tagId);
         }
 
-
         public IList<TagWidgetModel> TagsWidget()
         {
-            return (from tag in GetAll()
+            return (from tag in _tagsContext.Table
                     join tagMap in _tagsMappingContext.Table
                         on tag.Id equals tagMap.TagId
                     group tag by tag.Name into pg
                     let tagNumber = pg.Count()
                     select new TagWidgetModel { TagName = pg.Key, Count = tagNumber }).ToList();
         } 
-      
-     
     }
 }

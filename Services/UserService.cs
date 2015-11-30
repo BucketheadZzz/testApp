@@ -6,7 +6,7 @@ using WebMatrix.WebData;
 
 namespace TestApp.Services
 {
-    public class UserService: IUserService
+    public class UserService : IUserService
     {
         private static SimpleDbInitializer _initializer;
         private static object _initializerLock = new object();
