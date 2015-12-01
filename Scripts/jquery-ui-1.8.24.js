@@ -7502,7 +7502,7 @@ $.extend(Datepicker.prototype, {
 		var inst = $.datepicker._getInst(event.target);
 		if ($.datepicker._get(inst, 'constrainInput')) {
 			var chars = $.datepicker._possibleChars($.datepicker._get(inst, 'dateFormat'));
-			var chr = String.fromCharCode(event.charCode == undefined ? event.keyCode : event.charCode);
+			var chr = string.fromCharCode(event.charCode == undefined ? event.keyCode : event.charCode);
 			return event.ctrlKey || event.metaKey || (chr < ' ' || !chars || chars.indexOf(chr) > -1);
 		}
 	},

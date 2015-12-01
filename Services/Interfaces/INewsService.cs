@@ -18,5 +18,7 @@ namespace TestApp.Services.Interfaces
         IList<NewsModel> GetModels();
 
         IList<NewsModel> GetModelsByTag(string tag);
+
+        IList<NewsModel> GetModels22();
     }
 }

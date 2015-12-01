@@ -238,12 +238,6 @@
     <Content Include="Content\html5player\images\spr.png" />
     <Content Include="Content\html5player\js\jquery-ui-1.9.2.custom.min.js" />
     <Content Include="Content\html5player\js\main.js" />
-    <Content Include="Content\jplayer\css\jplayer.blue.monday.css" />
-    <Content Include="Content\jplayer\image\jplayer.blue.monday.jpg" />
-    <Content Include="Content\jplayer\image\jplayer.blue.monday.seeking.gif" />
-    <Content Include="Content\jplayer\image\jplayer.blue.monday.video.play.png" />
-    <Content Include="Content\jplayer\js\jplayer.playlist.min.js" />
-    <Content Include="Content\jplayer\js\jquery.jplayer.min.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\bootstrap\config.json" />
@@ -268,6 +262,7 @@
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-ui-1.8.24.js" />
     <Content Include="Scripts\jquery-ui-1.8.24.min.js" />
+    <Content Include="Scripts\jquery.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />

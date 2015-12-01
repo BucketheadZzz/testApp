@@ -60,6 +60,10 @@ namespace TestApp.Services
                     where news.NewsTagMapping.Count(x => x.Tag.Name == tag) > 0
                     select news).ToListModel();
         }
-     
+
+        public IList<NewsModel> GetModels22()
+        {
+            return  new List<NewsModel>();
+        }
     }
 }

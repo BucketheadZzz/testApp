@@ -13,7 +13,7 @@ namespace TestApp.Services.Interfaces
 
         void Delete(string tagName);
 
-        void AddMapping(IEnumerable<T> tags);
+        void UpdateMapping(IEnumerable<T> tagsMapping);
 
         void RemoveMapping(int objId);
 
@@ -21,7 +21,7 @@ namespace TestApp.Services.Interfaces
 
         bool AlreadyMapped(int tagId, int objId);
 
-        ICollection<T> PrepareTagMappingCollection(IEnumerable<Tag> tags, int newsId);
+        IEnumerable<T> PrepareTagMappingCollection(IEnumerable<Tag> tags, int newsId);
 
         IList<TagWidgetModel> TagsWidget();
 

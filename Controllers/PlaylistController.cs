@@ -78,7 +78,7 @@ namespace TestApp.Controllers
                 if (!string.IsNullOrEmpty(model.Tags))
                 {
                     var tagMapping = _tagService.PrepareTagMappingCollection(_tagService.Add(model.Tags.Split(',')), entity.Id);
-                    _tagService.AddMapping(tagMapping);
+                    _tagService.UpdateMapping(tagMapping);
                 }
 
                 if (model.Files.Count > 0 & model.Files[0] != null)

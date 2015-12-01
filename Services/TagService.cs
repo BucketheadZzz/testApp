@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.Common;
 using System.Linq;
-using DotNetOpenAuth.OAuth.ChannelElements;
 using TestApp.DAL;
 using TestApp.Models;
 using TestApp.Models.Domain;
@@ -50,25 +48,28 @@ namespace TestApp.Services
         }
 
 
-        public void AddMapping(IEnumerable<T> tags)
+        public void UpdateMapping(IEnumerable<T> tagsMapping)
         {
-            var objId = tags.First().ObjectId;
-            var addedIds = tags.Select(x => x.TagId).ToList();
+            var objId = tagsMapping.First().ObjectId;
+            var addedIds = tagsMapping.Select(x => x.TagId).ToList();
 
-            var tagsToDelete = (from mapping in _tagsMappingContext.Table join allTags in _tagsContext.Table on mapping.TagId equals allTags.Id
+
+            //remove mapping if tag is not contain in the added list
+            var mappingToDelete = (from mapping in _tagsMappingContext.Table join allTags in _tagsContext.Table on mapping.TagId equals allTags.Id
                 join existTag in GetExistingObjTags(objId).Where(x => !addedIds.Contains(x.Id))
                     on allTags.Id equals existTag.Id
                 select mapping);
-           
-            if (tagsToDelete.Any())
+
+            if (mappingToDelete.Any())
             {
-                _tagsMappingContext.Delete(tagsToDelete);
+                _tagsMappingContext.Delete(mappingToDelete);
             }
-            var listMapping = (from tag in tags
-                               where !AlreadyMapped(tag.ObjectId, objId)
+
+            var mappingToUpdate = (from tag in tagsMapping
+                               where !AlreadyMapped(tag.TagId, tag.ObjectId)
                                select tag).ToList();
 
-            _tagsMappingContext.Insert(listMapping);
+            _tagsMappingContext.Insert(mappingToUpdate);
         }
 
         public void RemoveMapping(int objId)
@@ -106,7 +107,7 @@ namespace TestApp.Services
                     select new TagWidgetModel { TagName = pg.Key, Count = tagNumber }).ToList();
         }
 
-        public ICollection<T> PrepareTagMappingCollection(IEnumerable<Tag> tags, int newsId)
+        public IEnumerable<T> PrepareTagMappingCollection(IEnumerable<Tag> tags, int newsId)
         {
             var resList = new Collection<T>();
             foreach (var tag in tags)

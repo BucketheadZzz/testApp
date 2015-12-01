@@ -2848,7 +2848,7 @@ ko.templateRewriting = (function () {
         },
 
         memoizeBindingAttributeSyntax: function (htmlString, templateEngine) {
-            return htmlString.replace(memoizeDataBindingAttributeSyntaxRegex, function () {
+            return htmlstring.replace(memoizeDataBindingAttributeSyntaxRegex, function () {
                 return constructMemoizedTagReplacement(/* dataBindAttributeValue: */ arguments[6], /* tagToRetain: */ arguments[1], templateEngine);
             }).replace(memoizeVirtualContainerBindingSyntaxRegex, function() {
                 return constructMemoizedTagReplacement(/* dataBindAttributeValue: */ arguments[1], /* tagToRetain: */ "<!-- ko -->", templateEngine);

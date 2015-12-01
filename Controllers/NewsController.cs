@@ -15,10 +15,6 @@ namespace TestApp.Controllers
         private readonly IFileService<NewsFileMapping> _fileService;
         private readonly ITagService<NewsTagMapping> _tagService;
 
-        public NewsController()
-        {
-            
-        }
 
         public NewsController(IUserService userService, INewsService newsService, IFileService<NewsFileMapping> fileService, ITagService<NewsTagMapping> tagService)
         {
@@ -51,9 +47,9 @@ namespace TestApp.Controllers
             NewsModel model;
             if (id != null)
             {
-                var entity = _newsService.GetById((int) id);
+                var entity = _newsService.GetById((int)id);
                 model = entity.ToModel();
-                model.Tags = string.Join(",",_tagService.GetTagsByMapping(model.Id).Select(x => x.Name));
+                model.Tags = string.Join(",", _tagService.GetTagsByMapping(model.Id).Select(x => x.Name));
             }
             else
             {
@@ -68,13 +64,13 @@ namespace TestApp.Controllers
         {
             if (model != null & ModelState.IsValid)
             {
+
+
                 var entity = model.ToEntity();
                 if (model.Id == 0)
                 {
-                    model.Created = DateTime.Now;
-                    model.CreatedBy = _userService.GetCurrentUserId();
-
-                    
+                    entity.Created = DateTime.Now;
+                    entity.CreatedBy = _userService.GetCurrentUserId();
                     _newsService.Add(entity);
                 }
                 else
@@ -85,7 +81,7 @@ namespace TestApp.Controllers
                 if (!string.IsNullOrEmpty(model.Tags))
                 {
                     var tagMapping = _tagService.PrepareTagMappingCollection(_tagService.Add(model.Tags.Split(',')), entity.Id);
-                    _tagService.AddMapping(tagMapping);
+                    _tagService.UpdateMapping(tagMapping);
                 }
                 if (model.Files.Count > 0 & model.Files[0] != null)
                 {

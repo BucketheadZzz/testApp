@@ -46,7 +46,6 @@ namespace TestApp.Services
             if (deletedItem != null)
             {
                 _fileContext.Delete(deletedItem);
-
             }
         }
 
