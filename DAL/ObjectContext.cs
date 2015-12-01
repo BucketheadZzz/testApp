@@ -10,14 +10,12 @@ namespace TestApp.DAL
 {
     public class ObjectContext : DbContext, IDbContext
     {
-
         public ObjectContext()
             : base("DefaultConnection")
         {
             Database.SetInitializer<ObjectContext>(null);
             this.Database.Log += s => Trace.WriteLine(s);
         }
-
 
         public new IDbSet<TEntity> Set<TEntity>() where TEntity : class
         {
@@ -31,23 +29,19 @@ namespace TestApp.DAL
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-          
-
             var typesToRegister = Assembly.GetExecutingAssembly().GetTypes()
-            .Where(type => !String.IsNullOrEmpty(type.Namespace))
+            .Where(type => !string.IsNullOrEmpty(type.Namespace))
             .Where(type => type.BaseType != null && type.BaseType.IsGenericType &&
                 type.BaseType.GetGenericTypeDefinition() == typeof(EntityTypeConfiguration<>));
+
             foreach (var type in typesToRegister)
             {
                 dynamic configurationInstance = Activator.CreateInstance(type);
                 modelBuilder.Configurations.Add(configurationInstance);
             }
 
-          //  modelBuilder.Entity<NewsFileMapping>().Property(x => x).HasColumnName("News_Id");
-
             //...or do it manually below. For example,
             //modelBuilder.Configurations.Add(new LanguageMap());
-
 
             base.OnModelCreating(modelBuilder);
         }

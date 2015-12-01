@@ -44,7 +44,7 @@ namespace TestApp.Controllers
             }
 
             // If we got this far, something failed, redisplay form
-            ModelState.AddModelError(String.Empty, "The user name or password provided is incorrect.");
+            ModelState.AddModelError(string.Empty, "The user name or password provided is incorrect.");
             return View(model);
         }
 
@@ -92,7 +92,7 @@ namespace TestApp.Controllers
                 }
                 catch (MembershipCreateUserException e)
                 {
-                    ModelState.AddModelError(String.Empty, ErrorCodeToString(e.StatusCode));
+                    ModelState.AddModelError(string.Empty, ErrorCodeToString(e.StatusCode));
                 }
             }
 
@@ -136,7 +136,7 @@ namespace TestApp.Controllers
                 message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
                 : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
                 : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
-                : String.Empty;
+                : string.Empty;
 
             ViewBag.ReturnUrl = Url.Action("Manage");
             return View();
@@ -148,7 +148,6 @@ namespace TestApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Manage(LocalPasswordModel model)
         {
-
             ViewBag.ReturnUrl = Url.Action("Manage");
 
             if (ModelState.IsValid)
@@ -168,7 +167,7 @@ namespace TestApp.Controllers
                 {
                     return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
                 }
-                ModelState.AddModelError(String.Empty, "The current password is incorrect or the new password is invalid.");
+                ModelState.AddModelError(string.Empty, "The current password is incorrect or the new password is invalid.");
             }
 
 

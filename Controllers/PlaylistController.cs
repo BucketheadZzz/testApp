@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
+using TestApp.Extensions;
 using TestApp.Models;
 using TestApp.Models.Domain;
 using TestApp.Services.Interfaces;
@@ -10,14 +12,14 @@ namespace TestApp.Controllers
     {
         private readonly IPlaylistService _playlistService;
         private readonly IUserService _userService;
-        private readonly IFileService<PlayListFileMapping> _playlistFileService;
+        private readonly IFileService<PlayListFileMapping> _fileService;
         private readonly ITagService<PlayListTagMapping> _tagService; 
 
-        public PlaylistController(IPlaylistService playlistService, IUserService userService, IFileService<PlayListFileMapping> playlistFileService, ITagService<PlayListTagMapping> tagService)
+        public PlaylistController(IPlaylistService playlistService, IUserService userService, IFileService<PlayListFileMapping> fileService, ITagService<PlayListTagMapping> tagService)
         {
             _playlistService = playlistService;
             _userService = userService;
-            _playlistFileService = playlistFileService;
+            _fileService = fileService;
             _tagService = tagService;
 
 
@@ -27,7 +29,7 @@ namespace TestApp.Controllers
 
         public ActionResult List(string tag)
         {
-            var model = String.IsNullOrEmpty(tag) ? _playlistService.GetModels() : _playlistService.GetModelsByTag(tag);
+            var model = string.IsNullOrEmpty(tag) ? _playlistService.GetModels() : _playlistService.GetModelsByTag(tag);
 
             return View(model);
         }
@@ -41,10 +43,16 @@ namespace TestApp.Controllers
 
         public ActionResult Edit(int? id)
         {
-            var model = id != null ? _playlistService.GetById((int) id) : new PlaylistModel();
-            if (model == null)
+            PlaylistModel model;
+            if (id != null)
             {
-                return RedirectToAction("ListAdmin", "Playlist");
+                var entity = _playlistService.GetById((int) id);
+                model = entity.ToModel();
+                model.Tags = string.Join(",", _tagService.GetTagsByMapping((int) id).Select(x => x.Name));
+            }
+            else
+            {
+                model = new PlaylistModel();
             }
 
             return View(model);
@@ -55,15 +63,30 @@ namespace TestApp.Controllers
         {
             if (model != null & ModelState.IsValid)
             {
+
+                var entity = model.ToEntity();
                 if (model.Id == 0)
                 {
                     model.CreatedBy = _userService.GetCurrentUserId();
-                    _playlistService.Add(model);
+                    _playlistService.Add(entity);
                 }
                 else
                 {
-                    _playlistService.Update(model);
+                    _playlistService.Update(entity);
                 }
+
+                if (!string.IsNullOrEmpty(model.Tags))
+                {
+                    var tagMapping = _tagService.PrepareTagMappingCollection(_tagService.Add(model.Tags.Split(',')), entity.Id);
+                    _tagService.AddMapping(tagMapping);
+                }
+
+                if (model.Files.Count > 0 & model.Files[0] != null)
+                {
+                    var mapping = _fileService.PrepareFileMappingCollection(_fileService.Add(model.Files), model.Id);
+                    _fileService.AddMapping(mapping);
+                }
+
                 return RedirectToAction("ListAdmin", "Playlist");
             }
 
@@ -73,17 +96,18 @@ namespace TestApp.Controllers
 
         public ActionResult Delete(int id)
         {
+            _tagService.RemoveMapping(id);
             _playlistService.Delete(id);
 
-            return RedirectToAction("ListAdmin","Playlist");
+            return RedirectToAction("ListAdmin", "Playlist");
         }
 
         public ActionResult DeleteFileFromPlaylist(int mappingId, int playlistId, int fileId)
         {
-            var removeMapped = new PlayListFileMapping() {FileId = fileId, ObjectId = playlistId, Id = mappingId};
-            _playlistFileService.RemoveMapping(removeMapped);
+            var removeMapped = new PlayListFileMapping { FileId = fileId, ObjectId = playlistId, Id = mappingId };
+            _fileService.RemoveMapping(removeMapped);
 
-            return RedirectToAction("Edit","Playlist", new {id = playlistId});
+            return RedirectToAction("Edit", "Playlist", new { id = playlistId });
         }
 
 
@@ -94,7 +118,7 @@ namespace TestApp.Controllers
         }
         public ActionResult GetAudioFile(int fileId)
         {
-            var file = _playlistFileService.GetById(fileId);
+            var file = _fileService.GetById(fileId);
             if (file != null)
             {
                 return File(file.BinaryData, file.ContentType, file.FileName);

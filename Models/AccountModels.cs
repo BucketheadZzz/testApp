@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TestApp.Models
 {
-   
     [Table("UserProfile")]
     public class UserProfile
     {

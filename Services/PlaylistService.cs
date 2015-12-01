@@ -13,50 +13,20 @@ namespace TestApp.Services
     public class PlaylistService : IPlaylistService
     {
         private readonly IRepository<Playlist> _playListRepository;
-        private readonly IFileService<PlayListFileMapping> _fileService;
-        private readonly ITagService<PlayListTagMapping> _tagService;
 
-        public PlaylistService(IRepository<Playlist> playListRepository, IFileService<PlayListFileMapping> fileService, ITagService<PlayListTagMapping> tagService)
+        public PlaylistService(IRepository<Playlist> playListRepository)
         {
             _playListRepository = playListRepository;
-            _fileService = fileService;
-            _tagService = tagService;
         }
 
-        public int Add(PlaylistModel playlist)
+        public void Add(Playlist playlist)
         {
-            var item = playlist.ToEntity();
-            var added = _playListRepository.Insert(item);
-
-            if (!string.IsNullOrEmpty(playlist.Tags))
-            {
-                var tagMapping = PrepareTagMappingCollection(_tagService.Add(playlist.Tags.Split(',')), added.Id);
-                _tagService.AddMapping(tagMapping);
-            }
-            if (playlist.Files.Count > 0 & playlist.Files[0] != null)
-            {
-               var mapping = PrepareMappingCollection(_fileService.Add(playlist.Files), added.Id);
-               _fileService.AddMapping(mapping);
-            }
-            return added.Id;
+            _playListRepository.Insert(playlist);
         }
 
-        public void Update(PlaylistModel playlist)
+        public void Update(Playlist playlist)
         {
-            var entity = playlist.ToEntity();
-
-            _playListRepository.Update(entity);
-
-            if (!string.IsNullOrEmpty(playlist.Tags))
-            {
-                var tagMapping = PrepareTagMappingCollection(_tagService.Add(playlist.Tags.Split(',')), playlist.Id);
-                _tagService.AddMapping(tagMapping);
-            }
-            if (playlist.Files.Count > 0 & playlist.Files[0] != null)
-            {
-                var mapping = PrepareMappingCollection(_fileService.Add(playlist.Files), playlist.Id);
-                _fileService.AddMapping(mapping);
-            }
+            _playListRepository.Update(playlist);
         }
 
         public void Delete(int id)
@@ -64,22 +34,14 @@ namespace TestApp.Services
             var deletedItem = _playListRepository.Table.SingleOrDefault(x => x.Id == id);
             if (deletedItem != null)
             {
-                _tagService.RemoveMapping(id);
-                _fileService.Delete(id);
                 _playListRepository.Delete(deletedItem);
             }
         }
 
-        public PlaylistModel GetById(int id)
+        public Playlist GetById(int id)
         {
             var enity = _playListRepository.GetById(id);
-            if (enity != null)
-            {
-                var model = enity.ToModel();
-                model.Tags = string.Join(",", _tagService.GetTagsByMapping(id).Select(x => x.Name));
-                return model;
-            }
-            return new PlaylistModel();
+            return enity;
         }
 
         public IList<PlaylistModel> GetModelsByTag(string tag)
@@ -95,24 +57,5 @@ namespace TestApp.Services
             return _playListRepository.Table.ToListModel();
         }
 
-        private ICollection<PlayListTagMapping> PrepareTagMappingCollection(IEnumerable<Tag> tags, int newsId)
-        {
-            var resList = new Collection<PlayListTagMapping>();
-            foreach (var tag in tags)
-            {
-                resList.Add(new PlayListTagMapping() { ObjectId = newsId, TagId = tag.Id });
-            }
-            return resList;
-        } 
-
-        private ICollection<PlayListFileMapping> PrepareMappingCollection(IEnumerable<File> files, int playListId)
-        {
-            var resList = new Collection<PlayListFileMapping>();
-            foreach (var file in files)
-            {
-                resList.Add(new PlayListFileMapping { FileId = file.Id, ObjectId = playListId });
-            }
-            return resList;
-        } 
     }
 }

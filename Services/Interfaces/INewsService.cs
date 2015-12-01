@@ -7,13 +7,13 @@ namespace TestApp.Services.Interfaces
 {
     public interface INewsService
     {
-        void Add(NewsModel item);
+        void Add(News item);
 
-        void Update(NewsModel item);
+        void Update(News item);
 
         void Delete(int id);
 
-        NewsModel GetById(int id);
+        News GetById(int id);
 
         IList<NewsModel> GetModels();
 

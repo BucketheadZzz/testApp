@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration;
 
 namespace TestApp.Models.Domain
 {
-
     [Table("News")]
     public class News : EntityTypeConfiguration<News> 
     {
@@ -38,7 +36,6 @@ namespace TestApp.Models.Domain
     [Table("NewsTag_Mapping")]
     public class NewsTagMapping : EntityTypeConfiguration<NewsTagMapping>, IBaseTagMappingEntity
     {
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -50,8 +47,8 @@ namespace TestApp.Models.Domain
         public int TagId { get; set; }
 
         public virtual News News { get; set; }
-        public virtual Tag Tag { get; set; }
 
+        public virtual Tag Tag { get; set; }
 
     }
 
@@ -59,7 +56,6 @@ namespace TestApp.Models.Domain
     [Table("NewsFile_Mapping")]
     public class NewsFileMapping : EntityTypeConfiguration<NewsFileMapping>, IBaseFileMappingEntity
     {
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -73,7 +69,6 @@ namespace TestApp.Models.Domain
         public virtual File File { get; set; }
 
         public virtual News News { get; set; }
-
 
     }
 }

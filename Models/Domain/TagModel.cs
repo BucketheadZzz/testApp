@@ -8,7 +8,6 @@ namespace TestApp.Models.Domain
     [Table("Tag")]
     public class Tag : EntityTypeConfiguration<Tag> 
     {
-
         public Tag()
         {
             NewsTagMapping = new HashSet<NewsTagMapping>();
@@ -23,6 +22,7 @@ namespace TestApp.Models.Domain
         public string Name { get; set; }
 
         public virtual ICollection<NewsTagMapping> NewsTagMapping { get; set; }
+
         public virtual ICollection<PlayListTagMapping> PlayListTagMapping { get; set; }
     }
 

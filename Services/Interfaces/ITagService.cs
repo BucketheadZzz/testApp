@@ -15,11 +15,13 @@ namespace TestApp.Services.Interfaces
 
         void AddMapping(IEnumerable<T> tags);
 
-        void RemoveMapping(int newsId);
+        void RemoveMapping(int objId);
 
         IList<Tag> GetTagsByMapping(int objId);
 
         bool AlreadyMapped(int tagId, int objId);
+
+        ICollection<T> PrepareTagMappingCollection(IEnumerable<Tag> tags, int newsId);
 
         IList<TagWidgetModel> TagsWidget();
 

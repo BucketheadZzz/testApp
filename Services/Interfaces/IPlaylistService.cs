@@ -7,13 +7,13 @@ namespace TestApp.Services.Interfaces
 {
     public interface IPlaylistService
     {
-        int Add(PlaylistModel playlist);
+        void Add(Playlist playlist);
 
-        void Update(PlaylistModel playlist);
+        void Update(Playlist playlist);
 
         void Delete(int id);
 
-        PlaylistModel GetById(int id);
+        Playlist GetById(int id);
 
         IList<PlaylistModel> GetModelsByTag(string tag);
 

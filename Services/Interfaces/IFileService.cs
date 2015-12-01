@@ -21,5 +21,7 @@ namespace TestApp.Services.Interfaces
         void AddMapping(IEnumerable<T> listMapping);
 
         void RemoveMapping(T entity);
+
+        ICollection<T> PrepareFileMappingCollection(IEnumerable<File> files, int playListId);
     }
 }

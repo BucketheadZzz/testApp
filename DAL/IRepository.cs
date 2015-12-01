@@ -7,7 +7,7 @@ using TestApp.Models.Domain;
 
 namespace TestApp.DAL
 {
-    public interface IRepository<T> where T: class
+    public interface IRepository<T> where T : class
     {
         T GetById(object id);
 
@@ -22,7 +22,6 @@ namespace TestApp.DAL
         void Delete(T ent);
 
         void Delete(IEnumerable<T> ent);
-
      
         IQueryable<T> Table { get; }
  

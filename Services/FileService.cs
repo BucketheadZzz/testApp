@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Web;
 using TestApp.DAL;
@@ -7,7 +8,7 @@ using TestApp.Services.Interfaces;
 
 namespace TestApp.Services
 {
-    public class FileService<T> : IFileService<T> where T : class
+    public class FileService<T> : IFileService<T> where T : class, IBaseFileMappingEntity, new()
     {
         private readonly IRepository<File> _fileContext;
         private readonly IRepository<T> _repositoryFileMapping;
@@ -67,5 +68,16 @@ namespace TestApp.Services
             _repositoryFileMapping.Delete(entity);
 
         }
+
+
+        public ICollection<T> PrepareFileMappingCollection(IEnumerable<File> files, int playListId)
+        {
+            var resList = new Collection<T>();
+            foreach (var file in files)
+            {
+                resList.Add(new T { FileId = file.Id, ObjectId = playListId });
+            }
+            return resList;
+        } 
     }
 }

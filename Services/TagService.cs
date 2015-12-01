@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.Common;
 using System.Linq;
 using DotNetOpenAuth.OAuth.ChannelElements;
@@ -9,7 +10,7 @@ using TestApp.Services.Interfaces;
 
 namespace TestApp.Services
 {
-    public class TagService<T> : ITagService<T> where T : class, IBaseTagMappingEntity 
+    public class TagService<T> : ITagService<T> where T : class, IBaseTagMappingEntity, new()
     {
         private readonly IRepository<Tag> _tagsContext;
         private readonly IRepository<T> _tagsMappingContext;
@@ -103,6 +104,16 @@ namespace TestApp.Services
                     group tag by tag.Name into pg
                     let tagNumber = pg.Count()
                     select new TagWidgetModel { TagName = pg.Key, Count = tagNumber }).ToList();
+        }
+
+        public ICollection<T> PrepareTagMappingCollection(IEnumerable<Tag> tags, int newsId)
+        {
+            var resList = new Collection<T>();
+            foreach (var tag in tags)
+            {
+                resList.Add(new T() { ObjectId = newsId, TagId = tag.Id });
+            }
+            return resList;
         } 
     }
 }

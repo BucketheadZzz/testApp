@@ -8,7 +8,6 @@ namespace TestApp.DAL
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-
         private readonly IDbContext _dbContext;
         private IDbSet<T> _entities;
 
@@ -16,7 +15,6 @@ namespace TestApp.DAL
         {
             _dbContext = dbContext;
         }
-
 
         protected virtual IDbSet<T> Entities
         {
@@ -30,9 +28,6 @@ namespace TestApp.DAL
                 return _entities;
             }
         }
-
-
-
 
         public virtual IQueryable<T> Table
         {
@@ -49,7 +44,6 @@ namespace TestApp.DAL
 
         public T Insert(T ent)
         {
-
             if (ent == null)
             {
                 throw new ArgumentNullException("ent");
@@ -104,7 +98,6 @@ namespace TestApp.DAL
 
         public void Delete(T ent)
         {
-
             if (ent == null)
             {
                 throw new ArgumentNullException("ent");
@@ -129,7 +122,6 @@ namespace TestApp.DAL
             {
                 Entities.Remove(entity);
             }
-
 
             _dbContext.SaveChanges();
         }

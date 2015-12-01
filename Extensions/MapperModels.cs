@@ -7,10 +7,9 @@ namespace TestApp.Extensions
 {
     public static class MapperModels
     {
-
         public static void CreateMaps()
         {
-            Mapper.CreateMap<News, NewsModel>().ForMember(x => x.NewsFilesMappings,y => y.MapFrom(z => z.NewsFileMappings));
+            Mapper.CreateMap<News, NewsModel>().ForMember(x => x.NewsFilesMappings, y => y.MapFrom(z => z.NewsFileMappings));
             Mapper.CreateMap<NewsModel, News>();
 
             Mapper.CreateMap<Playlist, PlaylistModel>().ForMember(x => x.PlayListFilesMappings, y => y.MapFrom(z => z.PlayListFileMapping));
@@ -31,8 +30,6 @@ namespace TestApp.Extensions
         {
             return Mapper.Map<NewsModel, News>(model);
         }
-
-
 
         public static PlaylistModel ToModel(this Playlist ent)
         {
