@@ -69,12 +69,12 @@ namespace TestApp.Services
         }
 
 
-        public ICollection<T> PrepareFileMappingCollection(IEnumerable<File> files, int playListId)
+        public ICollection<T> PrepareFileMappingCollection(IEnumerable<File> files, int objectId)
         {
             var resList = new Collection<T>();
             foreach (var file in files)
             {
-                resList.Add(new T { FileId = file.Id, ObjectId = playListId });
+                resList.Add(new T { FileId = file.Id, ObjectId = objectId });
             }
             return resList;
         } 

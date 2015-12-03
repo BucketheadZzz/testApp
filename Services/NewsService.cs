@@ -20,7 +20,6 @@ namespace TestApp.Services
         public void Add(News item)
         {
             _newsContext.Insert(item);
-           
         }
 
         public void Update(News item)
@@ -35,30 +34,25 @@ namespace TestApp.Services
             {
                 _newsContext.Delete(removedItem);
             }
-
         }
 
         public News GetById(int id)
         {
             var enity = _newsContext.Table.SingleOrDefault(x => x.Id == id);
-            //var model = enity.ToModel();
-            //model.Tags = string.Join(",", _tagService.GetTagsByMapping(id).Select(x => x.Name));
-
-            //return model;
             return enity;
         }
 
-        public IList<NewsModel> GetModels()
+        public IList<News> GetNews()
         {
-            return _newsContext.Table.ToListModel();
+            return _newsContext.Table.ToList();
         }
 
-        public IList<NewsModel> GetModelsByTag(string tag)
+        public IList<News> GetNewsByTag(string tag)
         {
             return
                 (from news in _newsContext.Table
                     where news.NewsTagMapping.Count(x => x.Tag.Name == tag) > 0
-                    select news).ToListModel();
+                    select news).ToList();
         }
 
         public IList<NewsModel> GetModels22()

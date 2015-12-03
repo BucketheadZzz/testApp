@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TestApp.DAL;
-using TestApp.Extensions;
-using TestApp.Models;
 using TestApp.Models.Domain;
 using TestApp.Services.Interfaces;
 
@@ -44,17 +40,17 @@ namespace TestApp.Services
             return enity;
         }
 
-        public IList<PlaylistModel> GetModelsByTag(string tag)
+        public IList<Playlist> GetPlayListsByTag(string tag)
         {
             return
             (from playList in _playListRepository.Table
              where playList.PlayListTagMapping.Count(x => x.Tag.Name == tag) > 0
-             select playList).ToListModel();
+             select playList).ToList();
         }
 
-        public IList<PlaylistModel> GetModels()
+        public IList<Playlist> GetPlayLists()
         {
-            return _playListRepository.Table.ToListModel();
+            return _playListRepository.Table.ToList();
         }
 
     }

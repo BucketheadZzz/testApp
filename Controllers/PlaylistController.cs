@@ -29,14 +29,14 @@ namespace TestApp.Controllers
 
         public ActionResult List(string tag)
         {
-            var model = string.IsNullOrEmpty(tag) ? _playlistService.GetModels() : _playlistService.GetModelsByTag(tag);
+            var model = string.IsNullOrEmpty(tag) ? _playlistService.GetPlayLists().ToListModel() : _playlistService.GetPlayListsByTag(tag).ToListModel();
 
             return View(model);
         }
 
         public ActionResult ListAdmin()
         {
-            var model = _playlistService.GetModels();
+            var model = _playlistService.GetPlayLists().ToListModel();
 
             return View(model);
         }
@@ -113,7 +113,7 @@ namespace TestApp.Controllers
 
         public ActionResult PlaylistsTagsWidget()
         {
-            var model = _tagService.TagsWidget();
+            var model = _tagService.GetTagsWidget();
             return View(model);
         }
         public ActionResult GetAudioFile(int fileId)

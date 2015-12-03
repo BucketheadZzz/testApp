@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using TestApp.Models;
 using TestApp.Models.Domain;
 
 namespace TestApp.Services.Interfaces
@@ -15,9 +13,9 @@ namespace TestApp.Services.Interfaces
 
         Playlist GetById(int id);
 
-        IList<PlaylistModel> GetModelsByTag(string tag);
+        IList<Playlist> GetPlayListsByTag(string tag);
 
-        IList<PlaylistModel> GetModels();
+        IList<Playlist> GetPlayLists();
 
     }
 }

@@ -97,7 +97,7 @@ namespace TestApp.Services
             return _tagsMappingContext.Table.Any(x => x.ObjectId == objId && x.TagId == tagId);
         }
 
-        public IList<TagWidgetModel> TagsWidget()
+        public IList<TagWidgetModel> GetTagsWidget()
         {
             return (from tag in _tagsContext.Table
                     join tagMap in _tagsMappingContext.Table

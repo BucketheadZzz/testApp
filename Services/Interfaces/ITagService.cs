@@ -23,7 +23,7 @@ namespace TestApp.Services.Interfaces
 
         IEnumerable<T> PrepareTagMappingCollection(IEnumerable<Tag> tags, int newsId);
 
-        IList<TagWidgetModel> TagsWidget();
+        IList<TagWidgetModel> GetTagsWidget();
 
     }
 }

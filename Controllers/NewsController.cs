@@ -30,14 +30,14 @@ namespace TestApp.Controllers
 
         public ActionResult List(string tag = null)
         {
-            var model = string.IsNullOrEmpty(tag) ? _newsService.GetModels() : _newsService.GetModelsByTag(tag);
+            var model = string.IsNullOrEmpty(tag) ? _newsService.GetNews().ToListModel() : _newsService.GetNewsByTag(tag).ToListModel();
 
             return View(model);
         }
 
         public ActionResult ListAdmin()
         {
-            var model = _newsService.GetModels();
+            var model = _newsService.GetNews().ToListModel();
 
             return View(model);
         }
@@ -45,6 +45,7 @@ namespace TestApp.Controllers
         public ActionResult Edit(int? id)
         {
             NewsModel model;
+
             if (id != null)
             {
                 var entity = _newsService.GetById((int)id);
@@ -64,8 +65,6 @@ namespace TestApp.Controllers
         {
             if (model != null & ModelState.IsValid)
             {
-
-
                 var entity = model.ToEntity();
                 if (model.Id == 0)
                 {
@@ -115,7 +114,7 @@ namespace TestApp.Controllers
 
         public ActionResult NewsTagsWidget()
         {
-            var model = _tagService.TagsWidget();
+            var model = _tagService.GetTagsWidget();
             return View(model);
         }
     }
